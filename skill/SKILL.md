@@ -39,7 +39,7 @@ metadata:
 
 1. 明确主色、主题名/ID、用途；若用户给出HEX则准确保留为常规模式品牌填充。只给颜色名称或氛围时，选出具体HEX并说明这是本次设计取值，不把推断写成用户既定选择。除非歧义影响品牌含义，否则继续生成，不反复确认。
 2. 读取 [色系与组件契约](references/theme-contract.md)。新建使用独立ID，更新已有自定义主题才用`--replace`。不要覆盖A–F文件来实现新增。
-3. 在项目根运行（调用当前环境的Python 3.12）：
+3. 在项目根运行（Python 3.10–3.14，构建只用标准库）：
 
 ```sh
 python skill/scripts/create_theme.py --id mist-blue --name 雾蓝 --accent "#6C8FA8" --dry-run
@@ -80,5 +80,6 @@ python skill/scripts/test_system.py
 - `scripts/test_release.py`：检查归档重现、链接与迁移重建。
 - `scripts/validate.py`：当前产物与颜色静态验收。
 - `scripts/test_system.py`：真实回归与新主题贯通测试。
+- `scripts/check_all.py`：在临时项目中检查全部有效 Python 文件；完整检查需要 Node.js，版本范围见 [Python 文件与版本](../docs/python-support.md)。
 
 原工作区的 `archive/v4/` 与 `scripts/old/` 仅为历史记录，不随 GitHub 仓库发布，也不是构建依赖。不要运行归档探针、把其截图当本轮证据，或重新引入其中已废弃的目录、数量、禁止规则。新增自动检查应验证可观察行为，不按CSS类数量制造“覆盖一致”的结论。

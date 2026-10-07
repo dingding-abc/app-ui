@@ -6,7 +6,7 @@
 
 当前包含 A–F 六套主题：余白、藍染、若竹、紫硝子、青磁、桜色，另加一套三色“晴日”。每套有基础与扩展样张；全局入口为 `index.html`，共享页包括 `standards.html`、`icons.html`、`devices.html`、`components.html`、`adaptive.html` 和 `reuse.html`。
 
-## 权威来源
+## 文件对应关系
 
 | 内容 | 来源 | 产物 |
 | --- | --- | --- |
@@ -27,7 +27,13 @@
 
 ## 环境与命令
 
-项目目录为命令工作目录。Python 3.12.14（见 `.python-version`），仅依赖标准库，不需要安装第三方包。Windows 或 WSL 均使用所处系统的 Python；本轮实际运行在 Windows 的受控 Python 3.12.14。
+命令均在项目根目录运行。支持 Python 3.10–3.14，构建只用标准库。`.python-version` 的 3.12 是供版本管理工具选择的默认版本，不要求 3.12.14。实际测试版本和各 Python 文件的用途见 `docs/python-support.md`。Windows 或 WSL 使用各自环境中的 Python。
+
+```sh
+python skill/scripts/check_all.py
+```
+
+上述命令在临时副本中执行全部检查，不改当前主题或页面。完整检查需要 Node.js；`--python-only` 会明确跳过 JavaScript 检查。以下为单项入口：
 
 ```sh
 python skill/scripts/rebuild.py

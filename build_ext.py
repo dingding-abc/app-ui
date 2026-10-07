@@ -1019,7 +1019,7 @@ def _nav_links():
 
 def nav_row(cur):
     links = _nav_links()
-    a = "".join(f'<a href="{href}"{" class=\"cur\"" if key == cur else ""}>{label}</a>'
+    a = "".join('<a href="{}"{}>{}</a>'.format(href, ' class="cur"' if key == cur else '', label)
                 for href, label, key in links)
     return f'<div class="nav-row">{a}</div>'
 
@@ -1244,6 +1244,8 @@ def build_ext_page(t):
 
     a11y_style = a11y_css_ext(L, t)
     body += a11y_section()
+    root_css = ';'.join('--{}:{}'.format(k.replace('_', '-'), v)
+                        for k, v in derive(t['vars'], True).items())
 
     page = f"""<!doctype html>
 <html lang="zh-CN">
@@ -1252,7 +1254,7 @@ def build_ext_page(t):
 <title>{t['jp']} {t['romaji']} 拡張 — 深色/Sheet/空态/引导/图表</title>
 <style>{CSS}</style>
 <style>{EXT_CSS}</style>
-<style>:root{{{';'.join(f'--{k.replace('_','-')}:{v}' for k, v in derive(t['vars'], True).items())};{root_add}}}
+<style>:root{{{root_css};{root_add}}}
 .dark{{{dark_css}}}
 {a11y_style}</style>
 </head>

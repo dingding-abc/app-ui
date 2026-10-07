@@ -1,16 +1,23 @@
-# React Native 消费契约 1
+# React Native 接入
 
-`design-tokens.json` 仍为生成产物，版本 5.1；新增 `native_contract_version=1`。
-`native/resolve-tokens.cjs` 校验版本、主题、模式和颜色后映射成 RN 语义角色。
-主色用于按钮填充，`onAction` 用于配对文字；文字操作使用 `actionText`。
-模式必须由宿主明确传入，缺少深色或增强对比度模式时报错，不作隐式回退。
+`native/resolve-tokens.cjs` 用来把 `design-tokens.json` 中的颜色转换为 React Native 可用的字段。当前数据版本为 5.1，原生接口版本为 1（`native_contract_version`）。
 
-复制 JSON、适配器及类型声明到消费工程，保留这三个文件的版本关系。
-CSS px 圆角转换为逻辑尺寸；百分比圆角不能直接传给 RN。示例胶囊使用 999，图标按钮由宿主按实际宽高构成圆形。
-不从 HTML 的缩放比例推断系统字号。示例保留 `allowFontScaling`，不限制文字行数，按钮仅设最小高度。
+把以下文件一起复制到自己的工程：
 
-`native/ActionExample.tsx` 展示最小保存行为，传入真正的持久化函数；失败可重试，快速重复按压不会重复提交。
-宿主负责安全区、键盘、VoiceOver 焦点与系统高对比度设置。示例没有整套原生工程，不能直接称为 iOS 验收通过。
+- `design-tokens.json`
+- `native/resolve-tokens.cjs`
+- `native/resolve-tokens.d.cts`
 
-在根目录执行 `node --test native/test-tokens.cjs` 验证所有主题四模式与失败路径。
-复制到已有 RN 工程后另做其类型检查、最小屏幕、最大系统文字、深色/高对比度和读屏验收。
+调用时指定主题和模式。主按钮用 `action` 填充、`onAction` 显示文字；普通背景上的文字操作用 `actionText`。适配器会检查版本、颜色和尺寸；主题或模式缺失时直接报错，避免错用另一套配色。
+
+`native/ActionExample.tsx` 是一个保存按钮示例。传入实际保存函数后，它会处理提交中、失败重试和快速重复点击。示例保留字体缩放，不限制文字行数，只设置按钮的最小高度。
+
+CSS 中的圆角会转换为逻辑尺寸。百分比圆角不能直接交给 React Native；示例胶囊使用 999，圆形图标按钮应按实际宽高设置。
+
+在本仓库运行适配器测试：
+
+```sh
+node --test native/test-tokens.cjs
+```
+
+接入后还需要在自己的工程中检查类型、系统字号、安全区、键盘和读屏操作。本仓库没有完整的 React Native App 工程。

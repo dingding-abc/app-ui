@@ -1,6 +1,6 @@
 {
   "status": "PASS",
-  "checks": 2319,
+  "checks": 2320,
   "html_pages": 21,
   "links": 478,
   "themes": 7,
@@ -60,7 +60,7 @@
     "b-aizome.html": "2b931274500253768e625dda7e643972dc120c822fb21a2336700d29f66799b3",
     "c-wakatake-ext.html": "bb9783d88e4f3252731fa17b619ce4074346915b9db30f4499904ba6050e660e",
     "c-wakatake.html": "98573f5334ee84c80f009411b792fa1feaf163e4489c5869b685f37d55163b54",
-    "components.html": "2017a77e858508990047646e5435f01891eda66b8846aa30f009dbcdd1f2ebd7",
+    "components.html": "13d96177fe3e9bef714e2d8f66e53973f133756d165e4deb6fa3cbb7380ada0c",
     "d-murasaki-ext.html": "d6e007de184e7f6c3029ed3e373f420177e8a702ed491ec35a0a2f8a65028c7c",
     "d-murasaki.html": "104fd671778adf7ed2c6981b6dd209b67730dc17dcf361b49e84712d59b7bf02",
     "devices.html": "e38f44a4e78e8f850f4b45fe550a981a682f0b1a4c00608f8af7e81675944984",
@@ -69,8 +69,8 @@
     "f-sakura-ext.html": "99a806f7c3c6d3a55596ebd22b7ed5b89709a4e5e2c682d21c42f87b35e0fb1e",
     "f-sakura.html": "55f78923c856f954f33bd1c685352ce3ca2233ccca07449bf7fa2534a0213c12",
     "icons.html": "fad7b1b36610d37f31e8add455a1e00ac61e36495c152f535387b87260e93822",
-    "index.html": "d3a88d6656f85f913665f8266d70a777127e7502c4a684e3c7f62af2b46ae243",
-    "reuse.html": "b287409d2bd25542271087e2a0808d8cf6a061010c726c1ee2a10b9e238e4ef6",
+    "index.html": "3117a84bcd0b322bf266cb9c851397c10b1049746d4f9f0a8473be30a05da867",
+    "reuse.html": "d4943b2046636a52ec99b09e07046d2018cdacd4209c670aaa2f6fd32b98872d",
     "standards.html": "4f62bb9b2763d18c291105f07c8779cd107fe862c0291b98a0d1785aea7afb2f",
     "theme-sunny-day-ext.html": "0bcd587334c1f2d09d5141375cdde12839d4de064e6d8e560ed4e8c769773604",
     "theme-sunny-day.html": "5915859ab5b7b5747de544dd12bd358832424faab210a4c43f533605785aa38d"
