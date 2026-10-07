@@ -1,0 +1,61 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>组件索引</title><style>body{margin:0;background:#F1EEE8;color:#2A2723;font-family:system-ui,sans-serif}a{color:#654631}</style><style>:root{--page-bg:#EAE5DC;--bg:#F6F3ED;--surface:#FDFCFA;--fill:#EFEBE1;--fill-strong:#DED7C9;--ink:#26251F;--line:#E8E3D8;--line-strong:#D8D0C0;--accent:#8A6248;--accent-deep:#6F4C36;--accent-soft:#F4EDE5;--danger:#B4493A;--danger-soft:#F7EDE9;--sun:#AE493C;--sat:#536B87;--tone2:#A68A5B;--soft2:#EFE7D5;--tone3:#6E7F8D;--soft3:#E3E8EB;--stamp:#C14436;--r-card:14px;--r-in:9px;--sub:#514D45;--faint:#6F685E;--on-accent:#FFFFFF;--on-danger:#FFFFFF;--on-stamp:#FFFFFF;--accent-text:#886047;--danger-text:#B04739;--accent-ui:#8A6248;--control-border:#95825C;--chart-muted:#A28E67;--tone2-text:#786441;--data2:#A28658;--tone3-text:#5A6874;--data3:#6E7F8D;--success-soft:#F0F5F2;--success-text:#417358;--warning-soft:#F5F3F0;--warning-text:#8C641C;--info-soft:#F0F3F5;--info-text:#386C96;--r-btn:999px;--r-icon:50%;--r-segment:12px;--r-segment-item:9px}
+/* v5: semantic roles; paper decoration and operable boundaries are separate. */
+:root{--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;
+--type-body:17px;--type-callout:16px;--type-subhead:15px;--type-footnote:13px;--type-caption:11px;--dt-scale:1}
+.kit-nav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 28px;font:13px/1.5 system-ui,sans-serif}
+.kit-nav a{display:inline-flex;align-items:center;min-height:44px;padding:8px 12px;border-radius:9px;color:#554A40;background:#FDFCFA;border:1px solid #D8D0C0;text-decoration:none}
+.kit-nav a[aria-current=page]{background:#554A40;color:#fff}
+.kit-note{font:13px/1.7 system-ui,sans-serif;color:#554A40;margin:0 0 24px;padding:16px;background:#FDFCFA;border:1px solid #D8D0C0;border-radius:12px}
+.kit-note a{color:#654631;text-decoration:underline}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--accent-ui,#554A40);outline-offset:3px}
+.btn{height:auto;min-height:50px;padding:12px 16px;white-space:normal;line-height:1.5;text-align:center}
+.btn-sm{min-height:44px;height:auto}
+.btn:active:not(:disabled):not(.btn-disabled){transform:scale(.98)}
+.btn-disabled,.btn:disabled{cursor:not-allowed}
+.btn-loading{opacity:1}
+.input,.row-field{height:auto;min-height:48px;padding-top:12px;padding-bottom:12px}
+.input,.textarea,.cbx,.rdo,.ibtn{border-color:var(--control-border)}
+.input.focus{border-color:var(--accent-ui)}
+.chip{height:auto;min-height:32px;padding-top:6px;padding-bottom:6px;white-space:normal}
+.chip[role=button]{min-height:44px}
+.ctl-row{min-height:44px;gap:12px}.ctl-label{flex:1}
+.cbx,.rdo,.toggle{flex-shrink:0;position:relative}
+.toggle{border:1px solid var(--control-border)}.toggle::after{box-shadow:inset 0 0 0 1px var(--on-accent)}
+.cbx::before,.rdo::before,.toggle::before{content:"";position:absolute;min-width:44px;min-height:44px;left:50%;top:50%;transform:translate(-50%,-50%)}
+.seg span{min-height:44px;display:flex;align-items:center;justify-content:center;padding:8px;white-space:normal}
+.cal-d{min-height:44px}.tab,.gtab .ti{min-height:44px}
+.tab.on{border-top:2px solid var(--accent-ui)}
+.tab.on,.gtab .ti.on{color:var(--accent-text)}
+.btn-ghost,.alert-btns .em,.kw span,.sl-head b,.q-title,.notes h4,.col-tag .no{color:var(--accent-text)}
+.kw span{border-color:var(--accent-ui)}
+.rdo.on{border-color:var(--accent-ui)}.rdo.on::after{background:var(--accent-ui)}
+.sl-fill{background:var(--accent-ui)}
+.sched.t2 .chip,.chip.t2{color:var(--tone2-text)}.sched.t3 .chip,.chip.t3{color:var(--tone3-text)}
+.field-msg,.field-label .req{color:var(--danger-text)}
+.screen .li-tx b,.screen .ctl-label,.screen .q-text{font-size:calc(var(--type-body) * var(--dt-scale,1))}
+.screen .sched h5,.screen .sched .bd h5{font-size:calc(var(--type-subhead) * var(--dt-scale,1))}
+.screen .sched p,.screen .li-tx span{font-size:calc(var(--type-footnote) * var(--dt-scale,1))}
+.screen .tab{font-size:calc(var(--type-caption) * var(--dt-scale,1))}
+.scr-scroll{overflow-y:auto;min-height:0}.scr{min-height:0}
+.phone{max-width:100%}.phone .q-text{font-size:calc(var(--type-body) * var(--dt-scale,1))}
+.s-body{overflow-y:auto;min-height:0}.sheet{max-height:calc(100% - 20px);overflow-y:auto}
+.sheet.full{overflow:hidden}.sheet.full>.btn{flex-shrink:0}.s-opt{height:auto;min-height:52px;padding:12px 0}
+.s-nav .xi{width:44px;height:44px}.s-nav .save{display:inline-flex;align-items:center;min-height:44px}
+.screen.ob-scr{overflow-y:auto}.ob{flex-shrink:0}
+.banner.warn{background:var(--warning-soft);color:var(--warning-text)}.banner.warn .bi{color:var(--warning-text)}
+.kit-status{padding:12px 16px;border-radius:9px;margin:8px 0;font-size:15px;line-height:1.6}
+.kit-status.success{background:var(--success-soft);color:var(--success-text)}
+.kit-status.warning{background:var(--warning-soft);color:var(--warning-text)}
+.kit-status.info{background:var(--info-soft);color:var(--info-text)}
+.board{max-width:100%;}.cols,.stage{flex-wrap:wrap}.col{max-width:100%}
+.bh{flex-wrap:wrap;gap:24px}.bh-title{min-width:0}.screen{max-width:100%}
+.kit-table-wrap{overflow-x:auto}.kit-doc{max-width:1000px;margin:auto;padding:32px 24px 64px}
+.kit-doc h1{font-size:32px;margin:16px 0}.kit-doc h2{font-size:22px;margin:32px 0 12px}
+.kit-doc p,.kit-doc li{font-size:16px;line-height:1.85}.kit-doc ul{padding-left:24px}
+.kit-doc table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.7}
+.kit-doc th,.kit-doc td{padding:12px;text-align:left;border-bottom:1px solid #D8D0C0;vertical-align:top}
+@media(max-width:700px){.board{width:100%;padding:24px 16px}.bh-left{flex-wrap:wrap}.col{width:100%!important;flex-basis:100%}.cols{gap:24px}.stage{gap:24px}.sec-tag{flex-wrap:wrap}.bh-title h1{font-size:30px}.kit-doc{padding:24px 16px}.igrid{grid-template-columns:repeat(3,minmax(0,1fr))}.dd{flex-wrap:wrap}.dc-row{min-width:850px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.btn:active{transform:none!important}}
+@media(prefers-reduced-transparency:reduce){.glass,.gnav,.gtab,.gbtn,.nav.glass,.tabbar.glass,.dglass .sheet{background:var(--surface)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}}
+</style></head><body><div class="board"><nav class="kit-nav" aria-label="规范导航"><a href="index.html">总览</a><a href="standards.html">设计与验收规范</a><a href="standards.html#widgetkit">WidgetKit 小组件</a><a href="standards.html#time-picker">时间选择（时/分）</a><a href="components.html" aria-current="page">组件索引</a><a href="adaptive.html">自适应场景</a><a href="reuse.html">复用与下载</a><a href="icons.html">图标</a><a href="devices.html">设备尺寸样张</a><a href="a-yohaku.html">余白</a><a href="b-aizome.html">藍染</a><a href="c-wakatake.html">若竹</a><a href="d-murasaki.html">紫硝子</a><a href="e-seiji.html">青磁</a><a href="f-sakura.html">桜色</a><a href="theme-sunny-day.html">晴日</a></nav><aside class="kit-note">v5 · 共用设计规范。这里展示组件外观，不连接业务服务；字号比例是排版演示。<a href="standards.html">查看交互规则与 iOS 验收要求</a></aside><main class="kit-doc"><h1>组件索引</h1><p>基础及扩展样张包含按钮、表单、列表、日历、Sheet、Alert、空／离线状态、引导、图表、小时与分钟滚轮及 WidgetKit 外观。本轮新增的可操作 HTML 演示包括：switch、checkbox、radio、segmented、range、stepper、search、required-input、load-state、confirmation、menu、selection-sheet、progress、notification。</p><p>基础页面展示浅色，扩展页面展示深色；系统增强对比度偏好切换到各自 HC Token。既有外观样张仍只表示静态规范，不能按类名计数视作可交互组件。原生 SwiftUI / WidgetKit 实现待项目接入。</p><div class="kit-table-wrap"><table><thead><tr><th>主题</th><th>浅色演示</th><th>深色演示</th></tr></thead><tbody><tr><td>余白</td><td><a href="a-yohaku.html#components-light">浅色交互</a></td><td><a href="a-yohaku-ext.html#components-dark">深色交互</a></td></tr><tr><td>藍染</td><td><a href="b-aizome.html#components-light">浅色交互</a></td><td><a href="b-aizome-ext.html#components-dark">深色交互</a></td></tr><tr><td>若竹</td><td><a href="c-wakatake.html#components-light">浅色交互</a></td><td><a href="c-wakatake-ext.html#components-dark">深色交互</a></td></tr><tr><td>紫硝子</td><td><a href="d-murasaki.html#components-light">浅色交互</a></td><td><a href="d-murasaki-ext.html#components-dark">深色交互</a></td></tr><tr><td>青磁</td><td><a href="e-seiji.html#components-light">浅色交互</a></td><td><a href="e-seiji-ext.html#components-dark">深色交互</a></td></tr><tr><td>桜色</td><td><a href="f-sakura.html#components-light">浅色交互</a></td><td><a href="f-sakura-ext.html#components-dark">深色交互</a></td></tr><tr><td>晴日</td><td><a href="theme-sunny-day.html#components-light">浅色交互</a></td><td><a href="theme-sunny-day-ext.html#components-dark">深色交互</a></td></tr></tbody></table></div><h2>行为边界</h2><p>选择控件使用原生 HTML 输入语义；禁用项不可修改。弹窗支持 Esc 和取消恢复焦点，选择 Sheet 在保存前只保留暂选值。搜索、加载及进度均是固定的本地演示数据；失败明确显示并可重试。</p></main></div></body></html>

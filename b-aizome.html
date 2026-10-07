@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>藍染 AIZOME — 日式简约 iOS UI 方向 B</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{background:var(--page-bg);color:var(--ink);letter-spacing:.01em;
+  font-family:"Hiragino Sans","Yu Gothic","Noto Sans JP","PingFang SC","Microsoft YaHei",-apple-system,sans-serif}
+svg{display:block}
+button{font-family:inherit}
+.board{width:1240px;margin:0 auto;padding:56px 32px 20px}
+
+/* ===== board header ===== */
+.bh{display:flex;justify-content:space-between;align-items:flex-start;gap:26px}
+.bh-left{display:flex;gap:24px;flex:1;min-width:0}
+.appicon{width:92px;height:92px;border-radius:22px;background:var(--bg);border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(0,0,0,.08);
+  flex:none;position:relative;overflow:hidden}
+.appicon .kanji{font-size:calc(36px * var(--dt-scale,1));font-weight:700;color:var(--accent-text)}
+.appicon::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--accent);opacity:.85}
+.kicker{font-size:calc(10.5px * var(--dt-scale,1));letter-spacing:.3em;color:var(--faint);text-transform:uppercase;margin-bottom:12px}
+.bh-title h1{font-size:calc(42px * var(--dt-scale,1));font-weight:700;letter-spacing:.1em;display:flex;align-items:baseline;gap:16px}
+.bh-title h1 .romaji{font-size:calc(13px * var(--dt-scale,1));font-weight:400;letter-spacing:.34em;color:var(--faint)}
+.bh-title .cn{margin-top:8px;font-size:calc(15px * var(--dt-scale,1));color:var(--sub);letter-spacing:.08em}
+.bh-title .desc{margin-top:14px;font-size:calc(13.5px * var(--dt-scale,1));line-height:2;color:var(--sub);max-width:520px}
+.kw{display:flex;gap:8px;margin-top:16px}
+.kw span{font-size:calc(11px * var(--dt-scale,1));letter-spacing:.18em;color:var(--accent-text);border:1px solid var(--accent);
+  border-radius:20px;padding:4px 13px;opacity:.9}
+.tate{writing-mode:vertical-rl;font-size:calc(11px * var(--dt-scale,1));letter-spacing:.55em;color:var(--faint);
+  height:150px;flex:none;padding-top:6px}
+.swatches{display:flex;gap:14px;flex:none;flex-wrap:wrap}
+/* i18n: 色名拉丁化后远超 64px（实测 Gerösteter Tee=83 / Roasted Tea=68 / Unbleached=67）。
+   固定 width 会截断，改 min-width + auto；日文名最长 36px，min-width 仍主导 => 渲染等价。 */
+.sw{text-align:center;min-width:64px;width:auto}
+.sw .dot{width:44px;height:44px;border-radius:50%;margin:0 auto 8px;border:1px solid rgba(0,0,0,.09);
+  box-shadow:inset 0 0 0 3px rgba(255,255,255,.35)}
+.sw .nm{font-size:calc(11px * var(--dt-scale,1));color:var(--sub);letter-spacing:.08em}
+.sw .hx{font-size:calc(9.5px * var(--dt-scale,1));color:var(--faint);font-family:ui-monospace,Consolas,monospace;margin-top:2px}
+.tokens{display:flex;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);
+  padding-top:20px;margin:30px 0 0}
+.tk{font-size:calc(11.5px * var(--dt-scale,1));color:var(--sub);border:1px solid var(--line);border-radius:8px;
+  padding:7px 13px;background:var(--surface);letter-spacing:.03em}
+.tk b{color:var(--ink);margin-right:7px;font-weight:600}
+
+/* ===== section tags ===== */
+.sec-tag{display:flex;align-items:baseline;gap:16px;margin:52px 2px 20px}
+.sec-tag h2{font-size:calc(20px * var(--dt-scale,1));letter-spacing:.2em;font-weight:700}
+.sec-tag .en{font-size:calc(10px * var(--dt-scale,1));letter-spacing:.26em;color:var(--faint);text-transform:uppercase}
+.sec-tag::after{content:"";flex:1;height:1px;background:var(--line);align-self:center}
+.cols{display:flex;gap:24px;align-items:flex-start}
+.col{width:375px;flex:none}
+.col-tag{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;padding:0 2px}
+.col-tag .no{font-size:calc(11px * var(--dt-scale,1));color:var(--accent-text);letter-spacing:.2em;font-weight:700}
+.col-tag .en{font-size:calc(10px * var(--dt-scale,1));letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+.col-tag .cn{font-size:calc(12.5px * var(--dt-scale,1));color:var(--sub);letter-spacing:.12em;margin-left:auto}
+
+/* ===== phone screen shell ===== */
+.screen{width:375px;background:var(--bg);border-radius:26px;border:1px solid var(--line);
+  box-shadow:0 12px 36px rgba(20,18,14,.10);overflow:hidden;padding-bottom:28px}
+.statusbar{height:46px;display:flex;justify-content:space-between;align-items:center;
+  padding:0 26px;font-size:calc(14.5px * var(--dt-scale,1));font-weight:700}
+.sb-right{display:flex;align-items:center;gap:6px}
+.sig{display:flex;gap:2px;align-items:flex-end}
+.sig i{width:3px;background:var(--ink);border-radius:1px;display:block}
+.sig i:nth-child(1){height:4px}.sig i:nth-child(2){height:6px}
+.sig i:nth-child(3){height:8px}.sig i:nth-child(4){height:10px}
+.wifi{display:flex;color:var(--ink)}
+.bat{width:23px;height:11.5px;border:1.4px solid var(--ink);border-radius:3.5px;position:relative;opacity:.85}
+.bat::before{content:"";position:absolute;right:-3.6px;top:2.8px;width:1.8px;height:4px;
+  background:var(--ink);border-radius:0 1px 1px 0}
+.bat i{position:absolute;left:1.4px;top:1.4px;bottom:1.4px;width:13px;background:var(--ink);
+  border-radius:1.5px;display:block}
+.sec{padding:0 22px;margin-top:26px}
+.statusbar + .sec{margin-top:16px}
+.sec-h{display:flex;align-items:baseline;gap:10px;margin-bottom:16px}
+.sec-h .jp{font-size:calc(13px * var(--dt-scale,1));font-weight:700;letter-spacing:.2em}
+.sec-h .en{font-size:calc(9.5px * var(--dt-scale,1));letter-spacing:.22em;text-transform:uppercase;color:var(--faint);margin-left:auto}
+.stack > * + *{margin-top:12px}
+.mt4{margin-top:4px}.mt12{margin-top:12px}.mt16{margin-top:16px}
+.mt20{margin-top:20px}.mt24{margin-top:24px}.mb16{margin-bottom:16px}
+
+/* ===== buttons ===== */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:50px;
+  border-radius:var(--r-btn);font-size:calc(16px * var(--dt-scale,1));font-weight:600;letter-spacing:.05em;
+  border:1px solid transparent;cursor:pointer;transition:transform .12s ease,filter .12s ease}
+.btn:hover{filter:brightness(1.06)}
+.btn:active{transform:scale(.985)}
+.btn-primary{background:var(--accent);color:var(--on-accent)}
+.btn-secondary{background:var(--surface);border-color:var(--line-strong);color:var(--ink)}
+.btn-soft{background:var(--accent-soft);color:var(--accent-deep)}
+.btn-ghost{background:transparent;color:var(--accent-text)}
+.btn-ghost:hover{background:var(--accent-soft)}
+.btn-danger{background:var(--danger-soft);color:var(--danger)}
+.btn-disabled{background:var(--fill);color:var(--faint);cursor:default}
+.btn-disabled:hover{filter:none}
+.btn-loading{background:var(--accent);color:var(--on-accent);opacity:.72}
+.spinner{width:16px;height:16px;border:2px solid var(--on-accent);opacity:.75;border-top-color:transparent;
+  border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-row{display:flex;gap:10px}
+.btn-row > .btn{flex:1;width:auto}
+.btn-sm{height:36px;font-size:calc(13px * var(--dt-scale,1))}
+.icon-btns{display:flex;gap:12px;margin-top:18px}
+.ibtn{width:44px;height:44px;border-radius:50%;background:var(--surface);border:1px solid var(--line-strong);
+  display:flex;align-items:center;justify-content:center;color:var(--sub);cursor:pointer;
+  transition:background .15s}
+.ibtn:hover{background:var(--fill)}
+.ibtn.fill{background:var(--accent);border-color:var(--accent-text);color:var(--on-accent)}
+.ibtn.fill:hover{filter:brightness(1.08);background:var(--accent)}
+.ibtn svg{width:19px;height:19px}
+
+/* ===== controls ===== */
+.seg{display:flex;background:var(--fill);border-radius:var(--r-segment);padding:2.5px;gap:2px}
+.seg span{flex:1;text-align:center;padding:7.5px 0;font-size:calc(13px * var(--dt-scale,1));letter-spacing:.06em;
+  border-radius:var(--r-segment-item);color:var(--sub);cursor:pointer}
+.seg .on{background:var(--surface);color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.ctl{margin-top:18px}
+.ctl-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0}
+.ctl-row + .ctl-row{border-top:1px solid var(--line)}
+.ctl-label{font-size:calc(14.5px * var(--dt-scale,1));letter-spacing:.03em}
+.ctl-sub{font-size:calc(11.5px * var(--dt-scale,1));color:var(--faint);margin-top:2px}
+.toggle{width:51px;height:31px;border-radius:16px;background:var(--accent);position:relative;
+  flex:none;cursor:pointer;transition:background .2s}
+.toggle::after{content:"";position:absolute;width:27px;height:27px;border-radius:50%;background:#fff;
+  top:2px;right:2px;box-shadow:0 1px 3px rgba(0,0,0,.18);transition:left .2s,right .2s}
+.toggle.off{background:var(--fill-strong)}
+.toggle.off::after{right:auto;left:2px}
+.cbx{width:22px;height:22px;border-radius:calc(var(--r-in) - 2px);border:1.5px solid var(--line-strong);
+  background:var(--surface);flex:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.cbx svg{width:13px;height:13px;color:var(--on-accent)}
+.cbx.on{background:var(--accent);border-color:var(--accent-text)}
+.rdo{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line-strong);
+  background:var(--surface);flex:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.rdo.on{border-color:var(--accent-text)}
+.rdo.on::after{content:"";width:11px;height:11px;border-radius:50%;background:var(--accent)}
+.sl-wrap{margin-top:20px}
+.sl-head{display:flex;justify-content:space-between;font-size:calc(14.5px * var(--dt-scale,1));margin-bottom:12px;letter-spacing:.03em}
+.sl-head b{font-weight:600;color:var(--accent-text);font-size:calc(13px * var(--dt-scale,1))}
+.slider{position:relative;height:26px;display:flex;align-items:center}
+.sl-track{width:100%;height:4px;background:var(--fill-strong);border-radius:2px;position:relative}
+.sl-fill{position:absolute;left:0;top:0;bottom:0;width:62%;background:var(--accent);border-radius:2px}
+.sl-knob{position:absolute;left:62%;top:50%;transform:translate(-50%,-50%);width:24px;height:24px;
+  border-radius:50%;background:#fff;border:1px solid var(--line-strong);box-shadow:0 1px 5px rgba(0,0,0,.15)}
+
+/* ===== inputs ===== */
+.field{margin-bottom:17px}
+.field-label{display:flex;justify-content:space-between;align-items:baseline;
+  font-size:calc(13px * var(--dt-scale,1));color:var(--sub);margin-bottom:8px;letter-spacing:.05em}
+.field-label .req{color:var(--danger);font-size:calc(10.5px * var(--dt-scale,1));letter-spacing:.15em}
+.field-label .hint{color:var(--faint);font-size:calc(11px * var(--dt-scale,1))}
+.input{height:48px;border:1px solid var(--line-strong);border-radius:var(--r-in);
+  background:var(--surface);padding:0 14px;font-size:calc(15px * var(--dt-scale,1));display:flex;align-items:center;color:var(--ink)}
+.ph{color:var(--faint)}
+.input.focus{border-color:var(--accent-text);box-shadow:0 0 0 3px var(--accent-soft)}
+.input.error{border-color:var(--danger);box-shadow:0 0 0 3px var(--danger-soft)}
+.field-msg{font-size:calc(12px * var(--dt-scale,1));margin-top:7px;color:var(--danger);letter-spacing:.02em}
+.field-msg.ok{color:var(--tone2-text)}
+.search{height:42px;background:var(--fill);border-radius:21px;display:flex;align-items:center;
+  gap:9px;padding:0 15px;font-size:calc(14px * var(--dt-scale,1));color:var(--faint)}
+.search svg{width:16px;height:16px;color:var(--sub)}
+.textarea{min-height:86px;border:1px solid var(--line-strong);border-radius:var(--r-in);
+  background:var(--surface);padding:13px 14px;font-size:calc(14.5px * var(--dt-scale,1));line-height:1.7}
+.row-field{display:flex;align-items:center;justify-content:space-between;gap:10px;height:56px;
+  border:1px solid var(--line-strong);border-radius:var(--r-in);padding:0 14px;
+  background:var(--surface);cursor:pointer}
+.rf-tx{display:flex;flex-direction:column;gap:3px}
+.rf-lab{font-size:calc(11.5px * var(--dt-scale,1));color:var(--faint);letter-spacing:.1em}
+.rf-val{font-size:calc(15px * var(--dt-scale,1));font-weight:600;letter-spacing:.03em}
+.chev{color:var(--faint);display:flex}
+.chev svg{width:16px;height:16px}
+
+/* ===== feedback ===== */
+.toast-stage{display:flex;justify-content:center;padding:8px 0 16px}
+.toast{display:flex;align-items:center;gap:9px;background:var(--ink);color:#fff;font-size:calc(13.5px * var(--dt-scale,1));
+  letter-spacing:.05em;padding:11px 20px;border-radius:24px;box-shadow:0 8px 24px rgba(0,0,0,.24)}
+.toast .ic{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.16);
+  display:flex;align-items:center;justify-content:center}
+.toast .ic svg{width:10px;height:10px}
+.stage{background:rgba(28,26,22,.4);border-radius:var(--r-card);padding:34px 24px;display:flex;justify-content:center}
+.alert{width:292px;background:var(--surface);border-radius:18px;overflow:hidden;text-align:center;
+  box-shadow:0 18px 44px rgba(0,0,0,.28)}
+.alert h4{font-size:calc(16.5px * var(--dt-scale,1));padding:22px 20px 8px;letter-spacing:.04em}
+.alert p{font-size:calc(13px * var(--dt-scale,1));color:var(--sub);padding:0 22px 20px;line-height:1.8}
+.alert-btns{display:flex;border-top:1px solid var(--line)}
+.alert-btns button{flex:1;height:48px;background:none;border:none;font-size:calc(15.5px * var(--dt-scale,1));color:var(--sub);
+  letter-spacing:.06em;cursor:pointer;font-family:inherit}
+.alert-btns button:hover{background:var(--fill)}
+.alert-btns button + button{border-left:1px solid var(--line)}
+.alert-btns .em{color:var(--accent-text);font-weight:700}
+.alert-btns .dg{color:var(--danger);font-weight:600}
+.banner{display:flex;gap:10px;align-items:flex-start;background:var(--accent-soft);
+  border-radius:var(--r-in);padding:12px 14px;font-size:calc(12.5px * var(--dt-scale,1));line-height:1.7;color:var(--accent-deep)}
+.banner .bi{flex:none;margin-top:1px;color:var(--accent-text)}
+.banner .bi svg{width:15px;height:15px}
+.banner.warn{background:var(--danger-soft);color:var(--danger)}
+.banner.warn .bi{color:var(--danger)}
+.badge-row{display:flex;align-items:center;gap:16px;margin-top:16px}
+.chip{height:30px;display:inline-flex;align-items:center;padding:0 14px;border-radius:15px;
+  background:var(--fill);font-size:calc(12.5px * var(--dt-scale,1));color:var(--sub);letter-spacing:.05em;
+  border:1px solid transparent;cursor:pointer}
+.chip.on{background:var(--accent-soft);color:var(--accent-deep);border-color:var(--accent-text);font-weight:600}
+.bdg{min-width:19px;height:19px;border-radius:10px;background:var(--danger);color:var(--on-danger);font-size:calc(11px * var(--dt-scale,1));
+  font-weight:700;display:inline-flex;align-items:center;justify-content:center;padding:0 5px}
+.dot-red{width:9px;height:9px;border-radius:50%;background:var(--danger);display:inline-block}
+.tag-new{font-size:calc(10px * var(--dt-scale,1));letter-spacing:.14em;color:var(--on-stamp);background:var(--stamp);border-radius:4px;
+  padding:3px 7px;font-weight:700}
+
+/* ===== calendar ===== */
+.cal{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);padding:16px 14px 12px}
+.cal-h{display:flex;align-items:center;justify-content:space-between;padding:0 6px 12px}
+.cal-h .m{font-size:calc(14.5px * var(--dt-scale,1));font-weight:700;letter-spacing:.1em}
+.cal-h .nav{color:var(--faint);display:flex;gap:16px;cursor:pointer}
+.cal-h .nav svg{width:16px;height:16px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.cal-wd{text-align:center;font-size:calc(10.5px * var(--dt-scale,1));color:var(--faint);padding:4px 0 8px;letter-spacing:.05em}
+.cal-wd.sun{color:var(--sun)}.cal-wd.sat{color:var(--sat)}
+.cal-d{height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-size:calc(13.5px * var(--dt-scale,1));color:var(--ink);position:relative}
+.cal-d .n{width:29px;height:29px;display:flex;align-items:center;justify-content:center;border-radius:50%;
+  cursor:pointer}
+.cal-d.sun{color:var(--sun)}.cal-d.sat{color:var(--sat)}
+.cal-d.sel .n{background:var(--accent);color:var(--on-accent);font-weight:700}
+.cal-d .ev{width:4px;height:4px;border-radius:50%;background:var(--accent);position:absolute;bottom:1px}
+.cal-d .ev.t2{background:var(--tone2)}
+.cal-legend{display:flex;gap:16px;justify-content:center;margin-top:8px;font-size:calc(10px * var(--dt-scale,1));color:var(--faint);
+  letter-spacing:.06em}
+.cal-legend i{width:5px;height:5px;border-radius:50%;background:var(--accent);display:inline-block;
+  margin-right:5px;vertical-align:1px}
+.cal-legend i.t2{background:var(--tone2)}
+
+/* ===== list & schedule ===== */
+.list{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden}
+.li{display:flex;align-items:center;gap:12px;padding:0 14px;height:62px;cursor:pointer;transition:background .15s}
+.li:hover{background:var(--fill)}
+.li + .li{border-top:1px solid var(--line)}
+.li-ic{width:34px;height:34px;border-radius:9px;background:var(--accent-soft);color:var(--accent-text);
+  display:flex;align-items:center;justify-content:center;flex:none}
+.li-ic svg{width:17px;height:17px}
+.li-tx b{display:block;font-size:calc(14.5px * var(--dt-scale,1));font-weight:600;letter-spacing:.03em}
+.li-tx span{display:block;font-size:calc(11.5px * var(--dt-scale,1));color:var(--faint);margin-top:2px}
+.li .right{margin-left:auto;display:flex;align-items:center;gap:8px;color:var(--faint)}
+.li .right svg{width:15px;height:15px}
+.li .val{font-size:calc(13px * var(--dt-scale,1));color:var(--sub)}
+.sched{display:flex;gap:12px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-card);padding:14px 15px}
+.sched .bar{width:3px;border-radius:2px;background:var(--accent);flex:none}
+.sched.t2 .bar{background:var(--tone2)}
+.sched.t3 .bar{background:var(--tone3)}
+/* i18n: 本地化时间格式 "14:30 Uhr"=50px / "7:00 a. m."=49px 超 48px（实测）。
+   改 min-width + auto；现内容 "15:00"(14.5px)≈37px，min-width 仍主导 => 渲染等价。 */
+.sched .tm{font-size:calc(11px * var(--dt-scale,1));color:var(--faint);flex:none;min-width:48px;width:auto;letter-spacing:.03em;line-height:1.6}
+.sched .tm b{display:block;font-size:calc(14.5px * var(--dt-scale,1));color:var(--ink);font-weight:700}
+.sched .bd{flex:1;min-width:0}
+.sched .bd h5{font-size:calc(14.5px * var(--dt-scale,1));font-weight:600;letter-spacing:.03em}
+.sched .bd p{font-size:calc(11.5px * var(--dt-scale,1));color:var(--faint);margin-top:3px}
+.sched .chip{height:22px;font-size:calc(10.5px * var(--dt-scale,1));padding:0 9px;border-radius:11px;margin-top:7px;
+  background:var(--accent-soft);color:var(--accent-deep);cursor:default}
+.sched.t2 .chip{background:var(--soft2);color:var(--tone2-text)}
+.sched.t3 .chip{background:var(--soft3);color:var(--tone3-text)}
+
+/* ===== demo phone ===== */
+.demo-row{display:flex;gap:36px;align-items:flex-start}
+.phone{width:395px;height:832px;border-radius:52px;background:#171614;padding:9px;flex:none;
+  box-shadow:0 26px 64px rgba(20,18,14,.30)}
+.phone-in{width:100%;height:100%;border-radius:44px;background:var(--bg);overflow:hidden;position:relative}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:112px;height:31px;
+  background:#0c0b0a;border-radius:17px;z-index:10}
+.home-bar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;
+  border-radius:3px;background:var(--ink);opacity:.28;z-index:10}
+.scr{position:absolute;inset:0;display:flex;flex-direction:column}
+.scr-scroll{flex:1;overflow:hidden;padding:0 20px}
+.scr-head{display:flex;justify-content:space-between;align-items:center;padding:8px 2px 14px}
+.greet{font-size:calc(12px * var(--dt-scale,1));color:var(--faint);letter-spacing:.16em}
+.date-big{font-size:calc(27px * var(--dt-scale,1));font-weight:700;letter-spacing:.05em;margin-top:5px}
+.avatar{width:38px;height:38px;border-radius:50%;border:1px solid var(--line-strong);
+  background:var(--surface);display:flex;align-items:center;justify-content:center;color:var(--sub)}
+.avatar svg{width:18px;height:18px}
+.week{display:flex;justify-content:space-between;padding:8px 10px 10px;margin:2px 0 0;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.wk{width:40px;text-align:center;display:flex;flex-direction:column;gap:6px;align-items:center}
+.wk span{font-size:calc(10.5px * var(--dt-scale,1));color:var(--faint);letter-spacing:.05em}
+.wk b{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:calc(14px * var(--dt-scale,1));font-weight:600;color:var(--ink)}
+.wk.sat b{color:var(--sat)}.wk.sun b{color:var(--sun)}
+.wk.sel b{background:var(--accent);color:var(--on-accent);font-weight:700;box-shadow:0 4px 10px rgba(0,0,0,.18)}
+.wk.sel span{color:var(--accent-text);font-weight:600}
+.scr-sec{display:flex;align-items:baseline;justify-content:space-between;margin:20px 2px 12px}
+.scr-sec h3{font-size:calc(15px * var(--dt-scale,1));font-weight:700;letter-spacing:.16em}
+.scr-sec h3 i{font-style:normal;font-weight:400;color:var(--faint);font-size:calc(11px * var(--dt-scale,1));letter-spacing:.08em}
+.scr-sec a{font-size:calc(11px * var(--dt-scale,1));color:var(--faint);letter-spacing:.1em;cursor:pointer}
+.quote{display:flex;gap:14px;justify-content:space-between;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r-card);padding:16px 18px;margin-top:22px}
+.tate-sm{writing-mode:vertical-rl;font-size:calc(10px * var(--dt-scale,1));letter-spacing:.4em;color:var(--faint)}
+.q-title{font-size:calc(10.5px * var(--dt-scale,1));letter-spacing:.24em;color:var(--accent-text);font-weight:600}
+.q-text{font-size:calc(14.5px * var(--dt-scale,1));line-height:2;margin-top:7px;letter-spacing:.08em}
+.q-by{font-size:calc(11px * var(--dt-scale,1));color:var(--faint);margin-top:7px;letter-spacing:.06em}
+.tabbar{height:82px;background:var(--surface);border-top:1px solid var(--line);
+  display:flex;padding:8px 6px 24px;flex:none}
+.tab{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:calc(9.5px * var(--dt-scale,1));
+  letter-spacing:.08em;color:var(--faint);cursor:pointer}
+/* i18n: Tab 标签单行截断。德语 Einstellungen=66px / 可用 73px（实测余量仅 7px），DT 放大即溢出。
+   min-width:0 让 flex 子项可收缩；:last-child 精确命中标签，避开 devices.html 的 .ic 图标 span。 */
+.tab span:last-child{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tab svg{width:22px;height:22px}
+.tab.on{color:var(--accent-text);font-weight:600}
+.tab-plus b{width:46px;height:46px;border-radius:50%;background:var(--accent);color:var(--on-accent);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.22);
+  margin-top:-18px}
+.tab-plus b svg{width:20px;height:20px}
+
+/* ===== notes ===== */
+.notes{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:30px 34px}
+.notes h3{font-size:calc(17px * var(--dt-scale,1));letter-spacing:.14em;display:flex;align-items:baseline;gap:12px}
+.notes h3 .en{font-size:calc(10px * var(--dt-scale,1));letter-spacing:.26em;color:var(--faint);text-transform:uppercase}
+.notes h4{font-size:calc(12px * var(--dt-scale,1));letter-spacing:.24em;color:var(--accent-text);margin:24px 0 8px;font-weight:700}
+.notes ul{list-style:none}
+.notes li{font-size:calc(13px * var(--dt-scale,1));color:var(--sub);line-height:2.1;padding-left:16px;position:relative}
+.notes li::before{content:"";position:absolute;left:0;top:14px;width:5px;height:5px;border-radius:50%;
+  background:var(--accent);opacity:.55}
+.notes li b{color:var(--ink);font-weight:600}
+.foot{margin:70px 0 46px;text-align:center;font-size:calc(10px * var(--dt-scale,1));letter-spacing:.34em;color:var(--faint)}
+
+
+:root{--ff-cjk:"Hiragino Sans","Yu Gothic","Noto Sans JP","PingFang SC","Microsoft YaHei",-apple-system,sans-serif;--ff-lat:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI","Noto Sans","Helvetica Neue","Hiragino Sans","PingFang SC","Microsoft YaHei",sans-serif}
+
+/* 1. 字体栈：拉丁语系改用拉丁优先栈。
+      实测拉丁字形在日文优先栈下由 Hiragino Sans 渲染，宽 +3~6px（约 +5%）且字形非最优。 */
+html:is([lang|="en"],[lang|="es"],[lang|="fr"],[lang|="de"],[lang|="it"],[lang|="pt"],[lang|="nl"],[lang|="sv"],[lang|="da"],[lang|="nb"],[lang|="fi"],[lang|="pl"],[lang|="cs"],[lang|="ro"],[lang|="hu"],[lang|="tr"],[lang|="id"],[lang|="vi"]) body{font-family:var(--ff-lat)}
+
+/* 2. 行高：CJK 1.9-2.2 → 拉丁 1.5。
+      拉丁沿用 CJK 行高会过松，且同高度容纳行数变少 → 挤压 .scr-scroll 内容量，
+      连带使 devices.html 的 edge-to-edge 判定失真。
+      注：.a11y-t(1.4) / .a11y-s(1.5) 本就是拉丁档位，不在此列。 */
+html:is([lang|="en"],[lang|="es"],[lang|="fr"],[lang|="de"],[lang|="it"],[lang|="pt"],[lang|="nl"],[lang|="sv"],[lang|="da"],[lang|="nb"],[lang|="fi"],[lang|="pl"],[lang|="cs"],[lang|="ro"],[lang|="hu"],[lang|="tr"],[lang|="id"],[lang|="vi"]) :is(.bh-title .desc,.q-text,.notes li){line-height:1.5}
+html:is([lang|="en"],[lang|="es"],[lang|="fr"],[lang|="de"],[lang|="it"],[lang|="pt"],[lang|="nl"],[lang|="sv"],[lang|="da"],[lang|="nb"],[lang|="fi"],[lang|="pl"],[lang|="cs"],[lang|="ro"],[lang|="hu"],[lang|="tr"],[lang|="id"],[lang|="vi"]) .alert p{line-height:1.55}
+
+/* 3. 字距两层制：文档/标识层 .1~.55em 对拉丁必须降档。
+      实测 .14em 使德语 Benachrichtigungen 129→164px（+27%）。
+      UI 组件层（.01~.08em）拉丁可原样保留，不在此处理。
+      例外（保留原字距，不降档）：
+        · .tag-new("NEW") —— ≤12 字符全大写短标签，无溢出风险。
+        · .romaji / .kanji —— YOHAKU·AIZOME·WAKATAKE·MURASAKI 与 余白·藍染·若竹·紫硝子。
+          这两个是**跨语种字串完全相同的固定设计资产**（本地化时只换 .bh-title h1 的
+          显示名，不换方向标识），且 .romaji 本就是全大写拉丁字形，.34em 宽字距
+          正是它的视觉身份；对其降档会破坏品牌识别而非修正溢出。
+          判据：降档只用于「字串随语言变长的本地化文本」，不用于固定标识。 */
+/* 3a 长文本/标题 → .02em */
+html:is([lang|="en"],[lang|="es"],[lang|="fr"],[lang|="de"],[lang|="it"],[lang|="pt"],[lang|="nl"],[lang|="sv"],[lang|="da"],[lang|="nb"],[lang|="fi"],[lang|="pl"],[lang|="cs"],[lang|="ro"],[lang|="hu"],[lang|="tr"],[lang|="id"],[lang|="vi"]) :is(.bh-title h1,.sec-tag h2,.col-tag .cn,.rf-lab,.cal-h .m,.greet,
+          .scr-sec h3,.scr-sec a,.notes h3,.field-label .req){letter-spacing:.02em}
+/* 3b 全大写短标签（随语言本地化的那些）→ .06em */
+html:is([lang|="en"],[lang|="es"],[lang|="fr"],[lang|="de"],[lang|="it"],[lang|="pt"],[lang|="nl"],[lang|="sv"],[lang|="da"],[lang|="nb"],[lang|="fi"],[lang|="pl"],[lang|="cs"],[lang|="ro"],[lang|="hu"],[lang|="tr"],[lang|="id"],[lang|="vi"]) :is(.kicker,.kw span,.sec-tag .en,.col-tag .en,.sec-h .en,
+          .q-title,.notes h3 .en,.notes h4,.foot){letter-spacing:.06em}
+
+/* 4. 竖排 fallback：vertical-rl 是 CJK 专属手法。
+      .tate 的 .55em 字距（实测 6.05px）下拉丁文不可读；转水平后 height 须放开。
+      .kanji（36px 汉字单字装饰）保留为图形元素，不参与本地化 —— 是否替换属内容决策。 */
+html:is([lang|="en"],[lang|="es"],[lang|="fr"],[lang|="de"],[lang|="it"],[lang|="pt"],[lang|="nl"],[lang|="sv"],[lang|="da"],[lang|="nb"],[lang|="fi"],[lang|="pl"],[lang|="cs"],[lang|="ro"],[lang|="hu"],[lang|="tr"],[lang|="id"],[lang|="vi"]) :is(.tate,.tate-sm){writing-mode:horizontal-tb;height:auto;letter-spacing:.06em;
+  max-width:22em;padding-top:0;text-orientation:mixed}
+</style>
+<style>:root{--page-bg:#E6E9EE;--bg:#F5F7FA;--surface:#FFFFFF;--fill:#EDF1F6;--fill-strong:#DBE2EB;--ink:#1A2330;--line:#E4E9F0;--line-strong:#D2DAE5;--accent:#2E5A87;--accent-deep:#24476C;--accent-soft:#E7EEF7;--danger:#B44A40;--danger-soft:#F9EEEC;--sun:#B54940;--sat:#4F6F92;--tone2:#4E8D7A;--soft2:#E2F0EB;--tone3:#7D6E9E;--soft3:#EBE7F4;--stamp:#C53D34;--r-card:12px;--r-in:7px;--sub:#48515F;--faint:#606D7E;--on-accent:#FFFFFF;--on-danger:#FFFFFF;--on-stamp:#FFFFFF;--accent-text:#2E5A87;--danger-text:#B44A40;--accent-ui:#2E5A87;--control-border:#718AAD;--chart-muted:#7B94B5;--tone2-text:#407364;--data2:#4E8D7A;--tone3-text:#6F6090;--data3:#7D6E9E;--success-soft:#F0F5F2;--success-text:#417358;--warning-soft:#F5F3F0;--warning-text:#8C641C;--info-soft:#F0F3F5;--info-text:#386C96;--r-btn:999px;--r-icon:50%;--r-segment:12px;--r-segment-item:9px}</style>
+<style>
+/* ===== 无障碍层 · Increased Contrast + Dynamic Type ===== */
+:root{--dt-scale:1}
+.hc{--page-bg:#E6E9EE;--bg:#F5F7FA;--surface:#FFFFFF;--fill:#EDF1F6;--fill-strong:#DBE2EB;--ink:#1A2330;--line:#D2DAE5;--line-strong:#556F93;--accent:#2E5A87;--accent-deep:#24476C;--accent-soft:#E7EEF7;--danger:#953D35;--danger-soft:#F9EEEC;--sun:#883730;--sat:#3B536D;--tone2:#4E8D7A;--soft2:#E2F0EB;--tone3:#7D6E9E;--soft3:#EBE7F4;--stamp:#A0322A;--r-card:12px;--r-in:7px;--sub:#48515F;--faint:#48525E;--on-accent:#FFFFFF;--on-danger:#FFFFFF;--on-stamp:#FFFFFF;--accent-text:#2B537D;--danger-text:#873730;--accent-ui:#2E5A87;--control-border:#556F93;--chart-muted:#7B94B5;--tone2-text:#2F564A;--data2:#4E8D7A;--tone3-text:#514669;--data3:#7D6E9E;--success-soft:#F0F5F2;--success-text:#335A45;--warning-soft:#F5F3F0;--warning-text:#6B4D15;--info-soft:#F0F3F5;--info-text:#2C5576;--r-btn:999px;--r-icon:50%;--r-segment:12px;--r-segment-item:9px}
+@media (prefers-contrast: more){:root{--page-bg:#E6E9EE;--bg:#F5F7FA;--surface:#FFFFFF;--fill:#EDF1F6;--fill-strong:#DBE2EB;--ink:#1A2330;--line:#D2DAE5;--line-strong:#556F93;--accent:#2E5A87;--accent-deep:#24476C;--accent-soft:#E7EEF7;--danger:#953D35;--danger-soft:#F9EEEC;--sun:#883730;--sat:#3B536D;--tone2:#4E8D7A;--soft2:#E2F0EB;--tone3:#7D6E9E;--soft3:#EBE7F4;--stamp:#A0322A;--r-card:12px;--r-in:7px;--sub:#48515F;--faint:#48525E;--on-accent:#FFFFFF;--on-danger:#FFFFFF;--on-stamp:#FFFFFF;--accent-text:#2B537D;--danger-text:#873730;--accent-ui:#2E5A87;--control-border:#556F93;--chart-muted:#7B94B5;--tone2-text:#2F564A;--data2:#4E8D7A;--tone3-text:#514669;--data3:#7D6E9E;--success-soft:#F0F5F2;--success-text:#335A45;--warning-soft:#F5F3F0;--warning-text:#6B4D15;--info-soft:#F0F3F5;--info-text:#2C5576;--r-btn:999px;--r-icon:50%;--r-segment:12px;--r-segment-item:9px}}
+</style>
+<style>
+/* v5: semantic roles; paper decoration and operable boundaries are separate. */
+:root{--space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;
+--type-body:17px;--type-callout:16px;--type-subhead:15px;--type-footnote:13px;--type-caption:11px;--dt-scale:1}
+.kit-nav{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 28px;font:13px/1.5 system-ui,sans-serif}
+.kit-nav a{display:inline-flex;align-items:center;min-height:44px;padding:8px 12px;border-radius:9px;color:#554A40;background:#FDFCFA;border:1px solid #D8D0C0;text-decoration:none}
+.kit-nav a[aria-current=page]{background:#554A40;color:#fff}
+.kit-note{font:13px/1.7 system-ui,sans-serif;color:#554A40;margin:0 0 24px;padding:16px;background:#FDFCFA;border:1px solid #D8D0C0;border-radius:12px}
+.kit-note a{color:#654631;text-decoration:underline}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--accent-ui,#554A40);outline-offset:3px}
+.btn{height:auto;min-height:50px;padding:12px 16px;white-space:normal;line-height:1.5;text-align:center}
+.btn-sm{min-height:44px;height:auto}
+.btn:active:not(:disabled):not(.btn-disabled){transform:scale(.98)}
+.btn-disabled,.btn:disabled{cursor:not-allowed}
+.btn-loading{opacity:1}
+.input,.row-field{height:auto;min-height:48px;padding-top:12px;padding-bottom:12px}
+.input,.textarea,.cbx,.rdo,.ibtn{border-color:var(--control-border)}
+.input.focus{border-color:var(--accent-ui)}
+.chip{height:auto;min-height:32px;padding-top:6px;padding-bottom:6px;white-space:normal}
+.chip[role=button]{min-height:44px}
+.ctl-row{min-height:44px;gap:12px}.ctl-label{flex:1}
+.cbx,.rdo,.toggle{flex-shrink:0;position:relative}
+.toggle{border:1px solid var(--control-border)}.toggle::after{box-shadow:inset 0 0 0 1px var(--on-accent)}
+.cbx::before,.rdo::before,.toggle::before{content:"";position:absolute;min-width:44px;min-height:44px;left:50%;top:50%;transform:translate(-50%,-50%)}
+.seg span{min-height:44px;display:flex;align-items:center;justify-content:center;padding:8px;white-space:normal}
+.cal-d{min-height:44px}.tab,.gtab .ti{min-height:44px}
+.tab.on{border-top:2px solid var(--accent-ui)}
+.tab.on,.gtab .ti.on{color:var(--accent-text)}
+.btn-ghost,.alert-btns .em,.kw span,.sl-head b,.q-title,.notes h4,.col-tag .no{color:var(--accent-text)}
+.kw span{border-color:var(--accent-ui)}
+.rdo.on{border-color:var(--accent-ui)}.rdo.on::after{background:var(--accent-ui)}
+.sl-fill{background:var(--accent-ui)}
+.sched.t2 .chip,.chip.t2{color:var(--tone2-text)}.sched.t3 .chip,.chip.t3{color:var(--tone3-text)}
+.field-msg,.field-label .req{color:var(--danger-text)}
+.screen .li-tx b,.screen .ctl-label,.screen .q-text{font-size:calc(var(--type-body) * var(--dt-scale,1))}
+.screen .sched h5,.screen .sched .bd h5{font-size:calc(var(--type-subhead) * var(--dt-scale,1))}
+.screen .sched p,.screen .li-tx span{font-size:calc(var(--type-footnote) * var(--dt-scale,1))}
+.screen .tab{font-size:calc(var(--type-caption) * var(--dt-scale,1))}
+.scr-scroll{overflow-y:auto;min-height:0}.scr{min-height:0}
+.phone{max-width:100%}.phone .q-text{font-size:calc(var(--type-body) * var(--dt-scale,1))}
+.s-body{overflow-y:auto;min-height:0}.sheet{max-height:calc(100% - 20px);overflow-y:auto}
+.sheet.full{overflow:hidden}.sheet.full>.btn{flex-shrink:0}.s-opt{height:auto;min-height:52px;padding:12px 0}
+.s-nav .xi{width:44px;height:44px}.s-nav .save{display:inline-flex;align-items:center;min-height:44px}
+.screen.ob-scr{overflow-y:auto}.ob{flex-shrink:0}
+.banner.warn{background:var(--warning-soft);color:var(--warning-text)}.banner.warn .bi{color:var(--warning-text)}
+.kit-status{padding:12px 16px;border-radius:9px;margin:8px 0;font-size:15px;line-height:1.6}
+.kit-status.success{background:var(--success-soft);color:var(--success-text)}
+.kit-status.warning{background:var(--warning-soft);color:var(--warning-text)}
+.kit-status.info{background:var(--info-soft);color:var(--info-text)}
+.board{max-width:100%;}.cols,.stage{flex-wrap:wrap}.col{max-width:100%}
+.bh{flex-wrap:wrap;gap:24px}.bh-title{min-width:0}.screen{max-width:100%}
+.kit-table-wrap{overflow-x:auto}.kit-doc{max-width:1000px;margin:auto;padding:32px 24px 64px}
+.kit-doc h1{font-size:32px;margin:16px 0}.kit-doc h2{font-size:22px;margin:32px 0 12px}
+.kit-doc p,.kit-doc li{font-size:16px;line-height:1.85}.kit-doc ul{padding-left:24px}
+.kit-doc table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.7}
+.kit-doc th,.kit-doc td{padding:12px;text-align:left;border-bottom:1px solid #D8D0C0;vertical-align:top}
+@media(max-width:700px){.board{width:100%;padding:24px 16px}.bh-left{flex-wrap:wrap}.col{width:100%!important;flex-basis:100%}.cols{gap:24px}.stage{gap:24px}.sec-tag{flex-wrap:wrap}.bh-title h1{font-size:30px}.kit-doc{padding:24px 16px}.igrid{grid-template-columns:repeat(3,minmax(0,1fr))}.dd{flex-wrap:wrap}.dc-row{min-width:850px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.btn:active{transform:none!important}}
+@media(prefers-reduced-transparency:reduce){.glass,.gnav,.gtab,.gbtn,.nav.glass,.tabbar.glass,.dglass .sheet{background:var(--surface)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}}
+
+.hp-section{margin:48px 0;letter-spacing:normal;font-family:system-ui,sans-serif}
+.hp-section>h2{font-size:24px;color:var(--ink)}
+.hp-section>p{font-size:15px;line-height:1.8;color:var(--sub)}
+.hp-section>p a{color:var(--accent-text)}
+.hp-grid{display:grid;grid-template-columns:repeat(2,minmax(0,390px));gap:24px;margin:24px 0}
+.hp-card{min-width:0;padding:20px;background:var(--surface);color:var(--ink);border:1px solid var(--control-border);border-radius:16px;--hp-row:max(44px,2.2em);font-size:calc(22px * var(--dt-scale,1))}
+.hp-card h3{margin:8px 0;font-size:calc(20px * var(--dt-scale,1));line-height:1.5}
+.hp-card .hp-mode,.hp-card .hp-hint,.hp-card .hp-result{font-size:calc(13px * var(--dt-scale,1));line-height:1.7;color:var(--sub);margin:8px 0}
+.hp-card .hp-value{font-size:calc(17px * var(--dt-scale,1));margin:16px 0;color:var(--ink)}
+.hp-frame{position:relative;margin:16px 0}
+.hp-columns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.hp-columns>*{min-width:0}
+.hp-column-label{display:block;text-align:center;font-size:calc(15px * var(--dt-scale,1));color:var(--sub);line-height:1.5;margin-top:12px}
+.hp-columns .hp-frame{margin-top:8px}
+.hp-band{pointer-events:none;position:absolute;top:calc(2 * var(--hp-row));height:var(--hp-row);left:0;right:0;background:var(--fill);border-block:1px solid var(--control-border);border-left:3px solid var(--accent-ui);border-radius:8px}
+.hp-wheel{position:relative;height:calc(5 * var(--hp-row));padding-block:calc(2 * var(--hp-row));overflow-y:auto;overscroll-behavior:contain;scroll-snap-type:y mandatory;scrollbar-width:none;font-size:inherit;outline-offset:3px;touch-action:pan-y;overflow-anchor:none}
+.hp-wheel::-webkit-scrollbar{display:none}
+.hp-option{height:var(--hp-row);display:flex;align-items:center;justify-content:center;scroll-snap-align:center;font-variant-numeric:tabular-nums;color:var(--sub);cursor:pointer;line-height:1.4}
+.hp-wheel:not([data-loop-ready]) .hp-option[aria-selected=true],.hp-option[data-active=true]{color:var(--ink);font-weight:700}
+.hp-option small{font-size:calc(15px * var(--dt-scale,1));margin-left:12px}
+.hp-wheel:focus-visible{outline:3px solid var(--accent-ui)}
+.hp-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+.hp-actions button{flex:1;min-width:88px;min-height:44px;padding:10px 16px;border-radius:var(--r-btn);font:inherit;font-size:calc(17px * var(--dt-scale,1));line-height:1.5;cursor:pointer}
+.hp-cancel{background:var(--surface);border:1px solid var(--control-border);color:var(--accent-text)}
+.hp-confirm{background:var(--accent);color:var(--on-accent);border:1px solid var(--control-border)}
+.hp-actions button:disabled{background:var(--fill);color:var(--sub);border:1px dashed var(--control-border);cursor:not-allowed}
+@media(max-width:700px){.hp-grid{grid-template-columns:minmax(0,1fr)}}
+
+.wg-section{margin:48px 0;font-family:system-ui,sans-serif;letter-spacing:normal;color:var(--ink)}
+.wg-section>h2{font-size:24px;margin-bottom:12px}.wg-section>p{font-size:15px;line-height:1.8;color:var(--sub)}
+.wg-section a{color:var(--accent-text)}
+.wg-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin:24px 0}
+.wg-mode{min-width:0;background:var(--bg);padding:20px;border-radius:20px;color:var(--ink)}
+.wg-mode h3{font-size:17px;margin:0 0 16px}.wg-caption{font-size:13px;line-height:1.7;color:var(--sub);margin:12px 0}
+.wg-previews{display:flex;flex-wrap:wrap;align-items:start;gap:16px}
+.wg-frame{--wg-demo-outer:28px;--wg-demo-padding:16px;box-sizing:border-box;min-width:0;background:var(--surface);border-radius:var(--wg-demo-outer);padding:var(--wg-demo-padding);border:1px solid var(--line-strong);display:flex;flex-direction:column;gap:12px}
+.wg-frame.small{width:184px;max-width:100%;min-height:184px}
+.wg-frame.medium{width:100%;max-width:384px;min-height:184px}
+.wg-title{font-size:calc(13px * var(--dt-scale,1));color:var(--sub);line-height:1.5}
+.wg-time{font-size:calc(28px * var(--dt-scale,1));font-weight:700;line-height:1.2;font-variant-numeric:tabular-nums;color:var(--ink)}
+.wg-inner{border-radius:calc(var(--wg-demo-outer) - var(--wg-demo-padding));background:var(--fill);color:var(--ink);padding:12px;font-size:calc(15px * var(--dt-scale,1));line-height:1.6}
+.wg-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:auto}
+.wg-action{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;border-radius:var(--r-btn);background:var(--accent);color:var(--on-accent);font-size:calc(15px * var(--dt-scale,1));font-weight:600;line-height:1.5;box-sizing:border-box}
+.wg-action.secondary{background:var(--surface);color:var(--accent-text);border:1px solid var(--control-border)}
+.wg-action.icon{width:44px;height:44px;padding:0;flex:none;border-radius:var(--r-icon);font-size:24px}
+.wg-lock{display:flex;align-items:center;flex-wrap:wrap;gap:12px;color:var(--ink);margin-top:16px}
+.wg-lock-circle{width:68px;height:68px;border:3px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px}
+.wg-lock-rect{max-width:180px;font-size:15px;line-height:1.5}.wg-lock-inline{width:100%;font-size:13px;line-height:1.5}
+@media(max-width:900px){.wg-grid{grid-template-columns:minmax(0,1fr)}}
+
+.cc-section{background:var(--bg);color:var(--ink);padding:16px;border-radius:var(--r-card);font-size:calc(var(--type-body,17px) * var(--dt-scale,1))}.cc-section p{color:var(--ink)}
+.cc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px;margin:20px 0}
+.cc-card{background:var(--surface);color:var(--ink);border:1px solid var(--line-strong);border-radius:var(--r-card);padding:18px;min-width:0;line-height:1.5}
+.cc-section h3{font-size:calc(22px * var(--dt-scale,1))}.cc-card h4{margin:0 0 10px;font-size:calc(20px * var(--dt-scale,1))}.cc-card p{overflow-wrap:anywhere}.cc-card label{display:block;margin:10px 0}.cc-card label.cc-choice,.cc-dialog label.cc-choice{display:flex;align-items:center;gap:8px;min-height:44px;padding:8px 0;white-space:normal}
+.cc-card input[type=text],.cc-card input[type=search]{box-sizing:border-box;max-width:100%;width:100%;min-height:44px;padding:8px;border:1px solid var(--control-border);border-radius:var(--r-in);background:var(--bg);color:var(--ink);font:inherit}
+.cc-card input[type=checkbox],.cc-card input[type=radio]{width:22px;height:22px;accent-color:var(--accent-ui);vertical-align:middle}
+.cc-card input[type=range]{width:100%;accent-color:var(--accent-ui)}.cc-card button,.cc-dialog button{min-height:44px;min-width:44px;border:1px solid var(--control-border);border-radius:var(--r-btn);background:var(--surface);color:var(--ink);padding:8px 16px;font:inherit;cursor:pointer}
+.cc-card button:disabled,.cc-dialog button:disabled{opacity:.5;cursor:not-allowed}.cc-card button.cc-primary,.cc-dialog button.cc-primary{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.cc-card button.cc-danger,.cc-dialog button.cc-danger{background:var(--danger);color:var(--on-danger);border-color:var(--danger)}
+.cc-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0}.cc-row label{margin:0}.cc-fieldset{border:1px solid var(--line-strong);border-radius:var(--r-in);padding:10px;margin:10px 0}.cc-fieldset legend{padding:0 5px}
+.cc-card [aria-invalid=true]{border-color:var(--danger-text)!important}.cc-error{color:var(--danger-text)}.cc-status{min-height:24px;font-weight:600}.cc-skeleton{height:18px;border-radius:8px;background:var(--fill-strong);animation:cc-pulse 1s ease-in-out infinite alternate}
+.cc-card progress{width:100%;height:16px;accent-color:var(--accent-ui)}.cc-dialog{max-width:min(90vw,480px);max-height:90vh;overflow:auto;border:1px solid var(--control-border);border-radius:18px;background:var(--surface);color:var(--ink);padding:24px;box-shadow:0 12px 40px #0005;font-size:calc(var(--type-body,17px) * var(--dt-scale,1))}
+.cc-dialog::backdrop{background:#0009}.cc-dialog h4{margin-top:0}.cc-dialog menu{display:flex;flex-wrap:wrap;gap:8px;padding:0;margin-bottom:0}.cc-dialog label{display:block;padding:8px 0}
+.cc-card :focus-visible,.cc-dialog :focus-visible{outline:3px solid var(--accent-ui);outline-offset:3px}
+@keyframes cc-pulse{from{opacity:.45}to{opacity:1}}@media(prefers-reduced-motion:reduce){.cc-skeleton{animation:none}}
+</style></head>
+<body>
+<div class="board"><nav class="kit-nav" aria-label="规范导航"><a href="index.html">总览</a><a href="standards.html">设计与验收规范</a><a href="standards.html#widgetkit">WidgetKit 小组件</a><a href="standards.html#time-picker">时间选择（时/分）</a><a href="components.html">组件索引</a><a href="adaptive.html">自适应场景</a><a href="reuse.html">复用与下载</a><a href="icons.html">图标</a><a href="devices.html">设备尺寸样张</a><a href="a-yohaku.html">余白</a><a href="b-aizome.html" aria-current="page">藍染</a><a href="c-wakatake.html">若竹</a><a href="d-murasaki.html">紫硝子</a><a href="e-seiji.html">青磁</a><a href="f-sakura.html">桜色</a><a href="theme-sunny-day.html">晴日</a></nav><aside class="kit-note">v5 · 共用设计规范。这里展示组件外观，不连接业务服务；字号比例是排版演示。<a href="standards.html">查看交互规则与 iOS 验收要求</a></aside><p class="kit-note"><a href="b-aizome-ext.html">查看本主题的扩展组件与深色样张</a></p>
+
+<div class="bh">
+  <div class="bh-left">
+    <div class="appicon"><span class="kanji">藍</span></div>
+    <div class="bh-title">
+      <div class="kicker">JP MINIMAL UI KIT — DIRECTION B — iOS / SwiftUI</div>
+      <h1>藍染<span class="romaji">AIZOME</span></h1>
+      <div class="cn">白瓷与蓝染的秩序感 · 蓝染 · 商务工具</div>
+      <p class="desc">冷调白瓷底，取传统蓝染色作唯一强调色，发丝线与利落小圆角带来秩序与信赖感。信息密度高而不喧哗，适合商务 / 金融 / 效率工具类 App。</p>
+      <div class="kw"><span>清潔</span><span>秩序</span><span>信頼</span></div>
+    </div>
+  </div>
+  <div class="tate">間を活かす・日本のミニマリズム</div>
+  <div class="swatches"><div class="sw"><div class="dot" style="background:#F5F7FA"></div><div class="nm">白磁</div><div class="hx">#F5F7FA</div></div><div class="sw"><div class="dot" style="background:#FFFFFF"></div><div class="nm">白</div><div class="hx">#FFFFFF</div></div><div class="sw"><div class="dot" style="background:#1A2330"></div><div class="nm">藍墨</div><div class="hx">#1A2330</div></div><div class="sw"><div class="dot" style="background:#2E5A87"></div><div class="nm">藍</div><div class="hx">#2E5A87</div></div><div class="sw"><div class="dot" style="background:#B44A40"></div><div class="nm">臙脂</div><div class="hx">#B44A40</div></div><div class="sw"><div class="dot" style="background:#E4E9F0"></div><div class="nm">淡藍</div><div class="hx">#E4E9F0</div></div></div>
+</div>
+<div class="tokens">
+  <span class="tk"><b>字体</b>Hiragino Sans · SF Pro</span>
+  <span class="tk"><b>字号</b>27 / 17 / 15 / 13 / 11</span>
+  <span class="tk"><b>圆角</b>卡片 12 / 按钮 胶囊 / 输入 7</span>
+  <span class="tk"><b>间距</b>4 · 8 · 12 · 16 · 24 · 32</span>
+  <span class="tk"><b>边框</b>1px 发丝线（低对比）</span>
+  <span class="tk"><b>强调色使用</b>主要操作与必要高亮</span>
+</div>
+
+
+<div class="sec-tag"><h2>组件样例</h2><span class="en">Component Gallery · 375 pt</span></div>
+
+<div class="cols">
+
+  <!-- ============ 01 Buttons & Controls ============ -->
+  <div class="col">
+    <div class="col-tag"><span class="no">01</span><span class="en">Buttons · Controls</span><span class="cn">按钮 · 控件</span></div>
+    <div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="sb-right"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="wifi"><svg width="15" height="11" viewBox="0 0 15 11" fill="none"><path d="M7.5 10.4 9.7 7.7a3.4 3.4 0 0 0-4.4 0z" fill="currentColor"/><path d="M4.1 5.9a5.5 5.5 0 0 1 6.8 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/><path d="M1.8 3.4a8.8 8.8 0 0 1 11.4 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg></span><span class="bat"><i></i></span></span></div>
+      <div class="sec">
+        <div class="sec-h"><span class="jp">ボタン</span><span class="en">Buttons</span></div>
+        <div class="stack">
+          <button class="btn btn-primary">続ける</button>
+          <button class="btn btn-secondary">キャンセル</button>
+          <div class="btn-row">
+            <button class="btn btn-soft">下書き保存</button>
+            <button class="btn btn-ghost">破棄</button>
+          </div>
+          <button class="btn btn-danger">削除する</button>
+          <button class="btn btn-disabled" disabled>利用不可</button>
+          <button class="btn btn-loading"><span class="spinner"></span>送信中…</button>
+          <div class="btn-row mt4">
+            <button class="btn btn-secondary btn-sm">タグ S</button>
+            <button class="btn btn-primary btn-sm">保存 S</button>
+          </div>
+        </div>
+        <div class="icon-btns">
+          <span class="ibtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg></span>
+          <span class="ibtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4l1.4 1.4L12 21.8l7.4-7.4 1.4-1.4a5.2 5.2 0 0 0 0-7.4z"/></svg></span>
+          <span class="ibtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5V20a1.8 1.8 0 0 0 1.8 1.8h12.4A1.8 1.8 0 0 0 20 20v-7.5"/><polyline points="16 6.3 12 2.3 8 6.3"/><line x1="12" y1="2.5" x2="12" y2="15"/></svg></span>
+          <span class="ibtn fill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+        </div>
+      </div>
+      <div class="sec">
+        <div class="sec-h"><span class="jp">コントロール</span><span class="en">Controls</span></div>
+        <div class="seg"><span class="on">すべて</span><span>未読</span><span>完了</span></div>
+        <div class="ctl">
+          <div class="ctl-row"><div><div class="ctl-label">通知</div><div class="ctl-sub">プッシュ通知を受け取る</div></div><div class="toggle"></div></div>
+          <div class="ctl-row"><div><div class="ctl-label">ダークモード</div><div class="ctl-sub">現在：ライト</div></div><div class="toggle off"></div></div>
+          <div class="ctl-row"><div class="ctl-label">利用規約に同意する</div><div class="cbx on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div></div>
+          <div class="ctl-row"><div class="ctl-label">メールマガジンを購読</div><div class="cbx"></div></div>
+          <div class="ctl-row"><div class="ctl-label">配送 · 標準（無料）</div><div class="rdo on"></div></div>
+          <div class="ctl-row"><div class="ctl-label">配送 · お急ぎ</div><div class="rdo"></div></div>
+        </div>
+        <div class="sl-wrap">
+          <div class="sl-head"><span>音量</span><b>62%</b></div>
+          <div class="slider"><div class="sl-track"><div class="sl-fill"></div></div><div class="sl-knob"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 02 Inputs & Feedback ============ -->
+  <div class="col">
+    <div class="col-tag"><span class="no">02</span><span class="en">Inputs · Feedback</span><span class="cn">输入 · 反馈</span></div>
+    <div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="sb-right"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="wifi"><svg width="15" height="11" viewBox="0 0 15 11" fill="none"><path d="M7.5 10.4 9.7 7.7a3.4 3.4 0 0 0-4.4 0z" fill="currentColor"/><path d="M4.1 5.9a5.5 5.5 0 0 1 6.8 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/><path d="M1.8 3.4a8.8 8.8 0 0 1 11.4 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg></span><span class="bat"><i></i></span></span></div>
+      <div class="sec">
+        <div class="sec-h"><span class="jp">入力</span><span class="en">Text Fields</span></div>
+        <div class="field">
+          <div class="field-label"><span>名前</span><span class="req">必須</span></div>
+          <div class="input"><span class="ph">山田 太郎</span></div>
+        </div>
+        <div class="field">
+          <div class="field-label"><span>メールアドレス</span></div>
+          <div class="input focus">y.taro@example.com</div>
+          <div class="field-msg ok">確認メールを送信しました</div>
+        </div>
+        <div class="field">
+          <div class="field-label"><span>パスワード</span></div>
+          <div class="input error">••••••</div>
+          <div class="field-msg">8文字以上で入力してください</div>
+        </div>
+        <div class="field">
+          <div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.2" y2="16.2"/></svg><span>商品・メモを検索</span></div>
+        </div>
+        <div class="field">
+          <div class="row-field"><div class="rf-tx"><span class="rf-lab">生年月日</span><span class="rf-val">1994年5月8日</span></div><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5.5 15.5 12 9 18.5"/></svg></span></div>
+        </div>
+        <div class="field">
+          <div class="field-label"><span>メモ</span><span class="hint">0 / 200</span></div>
+          <div class="textarea"><span class="ph">こちらに詳細をご記入ください…</span></div>
+        </div>
+      </div>
+      <div class="sec">
+        <div class="sec-h"><span class="jp">フィードバック</span><span class="en">Feedback</span></div>
+        <div class="toast-stage"><div class="toast"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>保存しました</div></div>
+        <div class="stage">
+          <div class="alert">
+            <h4>この項目を削除しますか？</h4>
+            <p>この操作は取り消せません。<br>よろしければ「削除」をタップしてください。</p>
+            <div class="alert-btns"><button>キャンセル</button><button class="dg">削除</button></div>
+          </div>
+        </div>
+        <div class="banner mt16"><span class="bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.2"/><line x1="12" y1="11" x2="12" y2="16.4"/><circle cx="12" cy="7.9" r="0.5" fill="currentColor" stroke="none"/></svg></span><span>新しいバージョン（2.1.0）が利用可能です。</span></div>
+        <div class="banner warn mt12"><span class="bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.6 1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.6a2 2 0 0 0-3.4 0z"/><line x1="12" y1="9" x2="12" y2="14"/><circle cx="12" cy="17.4" r="0.5" fill="currentColor" stroke="none"/></svg></span><span>通信が不安定です。時間をおいて再度お試しください。</span></div>
+        <div class="badge-row">
+          <span class="chip">タグ</span><span class="chip on">選択中</span>
+          <span class="bdg">3</span><span class="dot-red"></span><span class="tag-new">NEW</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ 03 Date & Lists ============ -->
+  <div class="col">
+    <div class="col-tag"><span class="no">03</span><span class="en">Date · Lists</span><span class="cn">日期 · 列表</span></div>
+    <div class="screen">
+      <div class="statusbar"><span>9:41</span><span class="sb-right"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="wifi"><svg width="15" height="11" viewBox="0 0 15 11" fill="none"><path d="M7.5 10.4 9.7 7.7a3.4 3.4 0 0 0-4.4 0z" fill="currentColor"/><path d="M4.1 5.9a5.5 5.5 0 0 1 6.8 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/><path d="M1.8 3.4a8.8 8.8 0 0 1 11.4 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg></span><span class="bat"><i></i></span></span></div>
+      <div class="sec">
+        <div class="sec-h"><span class="jp">日付</span><span class="en">Date &amp; Time</span></div>
+        <div class="row-field mb16"><div class="rf-tx"><span class="rf-lab">日付を選択</span><span class="rf-val">2026年9月17日（木）</span></div><span class="chev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5.5 15.5 12 9 18.5"/></svg></span></div>
+        <div class="cal">
+          <div class="cal-h"><span class="nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="14.5 5.5 8 12 14.5 18.5"/></svg></span><span class="m">2026年 9月</span><span class="nav"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5.5 15.5 12 9 18.5"/></svg></span></div>
+          <div class="cal-grid"><div class="cal-wd sun">日</div><div class="cal-wd">月</div><div class="cal-wd">火</div><div class="cal-wd">水</div><div class="cal-wd">木</div><div class="cal-wd">金</div><div class="cal-wd sat">土</div><div class="cal-d"></div><div class="cal-d"></div><div class="cal-d "><span class="n">1</span></div><div class="cal-d "><span class="n">2</span></div><div class="cal-d "><span class="n">3</span></div><div class="cal-d "><span class="n">4</span></div><div class="cal-d sat"><span class="n">5</span></div><div class="cal-d sun"><span class="n">6</span></div><div class="cal-d "><span class="n">7</span></div><div class="cal-d "><span class="n">8</span></div><div class="cal-d "><span class="n">9</span></div><div class="cal-d "><span class="n">10</span></div><div class="cal-d "><span class="n">11</span></div><div class="cal-d sat"><span class="n">12</span></div><div class="cal-d sun"><span class="n">13</span></div><div class="cal-d "><span class="n">14</span></div><div class="cal-d "><span class="n">15</span></div><div class="cal-d "><span class="n">16</span></div><div class="cal-d sel"><span class="n">17</span></div><div class="cal-d "><span class="n">18</span><i class="ev"></i></div><div class="cal-d sat"><span class="n">19</span></div><div class="cal-d sun"><span class="n">20</span></div><div class="cal-d "><span class="n">21</span></div><div class="cal-d "><span class="n">22</span><i class="ev t2"></i></div><div class="cal-d "><span class="n">23</span></div><div class="cal-d "><span class="n">24</span></div><div class="cal-d "><span class="n">25</span><i class="ev"></i></div><div class="cal-d sat"><span class="n">26</span></div><div class="cal-d sun"><span class="n">27</span></div><div class="cal-d "><span class="n">28</span></div><div class="cal-d "><span class="n">29</span></div><div class="cal-d "><span class="n">30</span></div></div>
+          <div class="cal-legend"><span><i></i>選択 · 今日</span><span><i class="t2"></i>予定あり</span></div>
+        </div>
+        <div class="chips mt16" style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="chip">09:00</span><span class="chip">09:30</span><span class="chip on">10:00</span><span class="chip">10:30</span><span class="chip">11:00</span>
+        </div>
+      </div>
+      <div class="sec">
+        <div class="sec-h"><span class="jp">リスト</span><span class="en">Lists</span></div>
+        <div class="list">
+          <div class="li"><span class="li-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-1.8a4.2 4.2 0 0 0-4.2-4.2H8.2A4.2 4.2 0 0 0 4 19.2V21"/><circle cx="12" cy="7.2" r="4.2"/></svg></span><div class="li-tx"><b>プロフィール</b><span>名前 · アイコン · 自己紹介</span></div><span class="right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5.5 15.5 12 9 18.5"/></svg></span></div>
+          <div class="li"><span class="li-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8.4a6 6 0 0 0-12 0c0 7-2.8 8.9-2.8 8.9h17.6S18 15.4 18 8.4"/><path d="M13.7 20.7a2 2 0 0 1-3.4 0"/></svg></span><div class="li-tx"><b>通知設定</b></div><span class="right"><span class="bdg">3</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5.5 15.5 12 9 18.5"/></svg></span></div>
+          <div class="li"><span class="li-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.6" width="16" height="10.6" rx="2.2"/><path d="M7.8 10.6V7a4.2 4.2 0 0 1 8.4 0v3.6"/></svg></span><div class="li-tx"><b>プライバシー</b></div><span class="right"><span class="val">公開</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 5.5 15.5 12 9 18.5"/></svg></span></div>
+        </div>
+        <div class="stack mt16">
+          <div class="sched"><span class="bar"></span><div class="tm"><b>15:00</b>90分</div><div class="bd"><h5>デザインレビュー</h5><p>会議室 B · 3 名</p><span class="chip">ワーク</span></div></div>
+          <div class="sched t2"><span class="bar"></span><div class="tm"><b>19:30</b>60分</div><div class="bd"><h5>ヨガクラス</h5><p>オンライン</p><span class="chip">予定</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec-tag"><h2>整屏示例 · 日程アプリ「朝」</h2><span class="en">Sample Screen · 375 × 812 pt</span></div>
+<div class="demo-row">
+  <div class="phone"><div class="phone-in">
+    <div class="island"></div>
+    <div class="scr">
+      <div class="statusbar"><span>9:41</span><span class="sb-right"><span class="sig"><i></i><i></i><i></i><i></i></span><span class="wifi"><svg width="15" height="11" viewBox="0 0 15 11" fill="none"><path d="M7.5 10.4 9.7 7.7a3.4 3.4 0 0 0-4.4 0z" fill="currentColor"/><path d="M4.1 5.9a5.5 5.5 0 0 1 6.8 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/><path d="M1.8 3.4a8.8 8.8 0 0 1 11.4 0" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" fill="none"/></svg></span><span class="bat"><i></i></span></span></div>
+      <div class="scr-scroll">
+        <div class="scr-head">
+          <div>
+            <div class="greet">おはよう ― 秋分の日まで 5 日</div>
+            <div class="date-big">9月17日（木）</div>
+          </div>
+          <div class="avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-1.8a4.2 4.2 0 0 0-4.2-4.2H8.2A4.2 4.2 0 0 0 4 19.2V21"/><circle cx="12" cy="7.2" r="4.2"/></svg></div>
+        </div>
+        <div class="week">
+          <div class="wk"><span>火</span><b>15</b></div>
+          <div class="wk"><span>水</span><b>16</b></div>
+          <div class="wk sel"><span>木</span><b>17</b></div>
+          <div class="wk"><span>金</span><b>18</b></div>
+          <div class="wk sat"><span>土</span><b>19</b></div>
+          <div class="wk sun"><span>日</span><b>20</b></div>
+          <div class="wk"><span>月</span><b>21</b></div>
+        </div>
+        <div class="scr-sec"><h3>予定 <i>· 3件</i></h3><a>すべて見る</a></div>
+        <div class="stack">
+          <div class="sched"><span class="bar"></span><div class="tm"><b>09:30</b>45分</div><div class="bd"><h5>朝会 · チーム共有</h5><p>会議室 A</p><span class="chip">会議</span></div></div>
+          <div class="sched t2"><span class="bar"></span><div class="tm"><b>12:30</b>60分</div><div class="bd"><h5>ランチ · 佐藤さん</h5><p>駅前カフェ</p><span class="chip">予定</span></div></div>
+          <div class="sched t3"><span class="bar"></span><div class="tm"><b>15:00</b>90分</div><div class="bd"><h5>デザインレビュー</h5><p>オンライン</p><span class="chip">ワーク</span></div></div>
+        </div>
+        <div class="quote">
+          <div>
+            <div class="q-title">今日の一句</div>
+            <div class="q-text">名月を 取ってくれろと<br>泣く子かな</div>
+            <div class="q-by">— 小林一茶</div>
+          </div>
+          <div class="tate-sm">めいげつ</div>
+        </div>
+      </div>
+      <div class="tabbar">
+        <div class="tab on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.2 9.8 12 2.8l8.8 7v10a1.6 1.6 0 0 1-1.6 1.6H4.8a1.6 1.6 0 0 1-1.6-1.6z"/><polyline points="9.2 21.4 9.2 14.2 14.8 14.2 14.8 21.4"/></svg><span>ホーム</span></div>
+        <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.2" y="4.8" width="17.6" height="16.8" rx="2.2"/><line x1="16.2" y1="2.4" x2="16.2" y2="7"/><line x1="7.8" y1="2.4" x2="7.8" y2="7"/><line x1="3.2" y1="10.2" x2="20.8" y2="10.2"/></svg><span>カレンダー</span></div>
+
+        <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2.6H6.4a2.2 2.2 0 0 0-2.2 2.2v14.4a2.2 2.2 0 0 0 2.2 2.2h11.2a2.2 2.2 0 0 0 2.2-2.2V7.4z"/><polyline points="14 2.6 14 7.4 19.8 7.4"/></svg><span>メモ</span></div>
+        <div class="tab"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1.4" y1="14" x2="6.6" y2="14"/><line x1="9.4" y1="8" x2="14.6" y2="8"/><line x1="17.4" y1="16" x2="22.6" y2="16"/></svg><span>設定</span></div>
+      </div>
+    </div>
+    <div class="home-bar"></div>
+  </div></div>
+
+  <div class="notes"><h3>设计说明 <span class="en">Design Notes</span></h3>
+    <h4>美学原则</h4><ul>
+      <li><b>间（Ma）</b>：留白与清晰层级共同组织内容，间距按组件和屏幕调整。</li>
+      <li><b>线条与角色</b>：克制的描边、胶囊按钮与多色分类各有用途；主色用于主要操作；第二、第三色用于分类与图表。错误、成功和警告使用独立语义。</li>
+      <li><b>和式日历</b>：周日与周六的装饰色保留日历语境，不代替状态文字。</li>
+      <li><b>双语版式</b>：功能文字随语言和字号调整，罗马音用于辅助识别。</li>
+    </ul><h4>已有样张与原生接入</h4><ul>
+      <li><a href="b-aizome-ext.html">查看本主题的深色、Sheet、空态、引导和图表等扩展样张</a>；基础页还包含可操作 HTML 演示。</li>
+      <li>四模式语义颜色见 <a href="design-tokens.json">Token 导出</a>；原生工程映射系统动态颜色和安全区。</li>
+      <li>HTML 样张与本地交互不代替 SwiftUI / WidgetKit 实现、VoiceOver 或真机验收；目标 iOS 版本由具体 App 确认。</li>
+    </ul></div>
+</div>
+
+<section class="notes"><h3>状态语义</h3><div class="kit-status success">✓ 已保存 · 操作成功</div><div class="kit-status warning">! 需要留意 · 请检查输入</div><div class="kit-status info">i 提示 · 更多操作信息</div><p>错误需说明原因及恢复操作；状态同时使用文字或图标，不只靠颜色。</p></section><section class="wg-section" id="widgetkit"><h2>WidgetKit · 桌面与锁屏小组件</h2><p>外观样张，操作标签不执行动作。尺寸与圆角数字仅用于HTML展示，原生由WidgetKit管理；滚轮选择器保留在App内。</p><div class="wg-grid"><article class="wg-mode " data-widget-mode="light"><h3>浅色</h3>
+<div class="wg-previews">
+<div class="wg-frame small" data-widget-family="systemSmall" role="img" aria-label="小尺寸桌面小组件外观：胶囊文字操作和圆形图标操作">
+<span class="wg-title">今日提醒</span><strong class="wg-time">09:30</strong><div class="wg-actions"><span class="wg-action">完成</span><span class="wg-action icon" aria-hidden="true">＋</span></div></div>
+<div class="wg-frame medium" data-widget-family="systemMedium" role="img" aria-label="中尺寸桌面小组件外观：内部卡片与外层容器圆角协调，按钮为胶囊形">
+<span class="wg-title">下一项 · 09:30</span><div class="wg-inner">晨间阅读<br>为自己留出 20 分钟</div><div class="wg-actions"><span class="wg-action">标记完成</span><span class="wg-action secondary">打开日程</span></div></div></div>
+<p class="wg-caption">容器内卡片随外框圆角协调；独立文字操作为胶囊，图标操作为圆形。</p>
+<div class="wg-lock" role="img" aria-label="锁屏单色布局示意：圆形、矩形和行内，不展示桌面品牌底色">
+<div class="wg-lock-circle" data-widget-family="accessoryCircular">2 / 3</div>
+<div class="wg-lock-rect" data-widget-family="accessoryRectangular">下一项 09:30<br>晨间阅读</div>
+<div class="wg-lock-inline" data-widget-family="accessoryInline">09:30 · 晨间阅读</div></div>
+<p class="wg-caption">锁屏布局仅为单色示意；真实颜色、尺寸和背景由系统呈现。</p></article><article class="wg-mode hc" data-widget-mode="light_hc"><h3>浅色 · 增强对比度</h3>
+<div class="wg-previews">
+<div class="wg-frame small" data-widget-family="systemSmall" role="img" aria-label="小尺寸桌面小组件外观：胶囊文字操作和圆形图标操作">
+<span class="wg-title">今日提醒</span><strong class="wg-time">09:30</strong><div class="wg-actions"><span class="wg-action">完成</span><span class="wg-action icon" aria-hidden="true">＋</span></div></div>
+<div class="wg-frame medium" data-widget-family="systemMedium" role="img" aria-label="中尺寸桌面小组件外观：内部卡片与外层容器圆角协调，按钮为胶囊形">
+<span class="wg-title">下一项 · 09:30</span><div class="wg-inner">晨间阅读<br>为自己留出 20 分钟</div><div class="wg-actions"><span class="wg-action">标记完成</span><span class="wg-action secondary">打开日程</span></div></div></div>
+<p class="wg-caption">容器内卡片随外框圆角协调；独立文字操作为胶囊，图标操作为圆形。</p>
+<div class="wg-lock" role="img" aria-label="锁屏单色布局示意：圆形、矩形和行内，不展示桌面品牌底色">
+<div class="wg-lock-circle" data-widget-family="accessoryCircular">2 / 3</div>
+<div class="wg-lock-rect" data-widget-family="accessoryRectangular">下一项 09:30<br>晨间阅读</div>
+<div class="wg-lock-inline" data-widget-family="accessoryInline">09:30 · 晨间阅读</div></div>
+<p class="wg-caption">锁屏布局仅为单色示意；真实颜色、尺寸和背景由系统呈现。</p></article></div><p><a href="standards.html#widgetkit">查看小组件圆角、按钮形状与原生验收规则 →</a></p></section><section class="hp-section" id="hour-picker"><h2>小时滚动选择</h2><p>居中一行表示当前草稿，确认后才更新已确认值。下方为展开的 Sheet 内容样张；不连接业务服务，刷新恢复 09:00。</p><div class="hp-grid"><article class="hp-card " data-hour-picker="9" data-hour-mode="light">
+<p class="hp-mode">浅色 · Sheet 内容示例</p><h3 id="hp-light-title">选择提醒小时</h3>
+<p class="hp-hint" id="hp-light-hint">24 小时制 · 首尾循环，每次选择一个整点。滚动或使用 ↑ ↓，Home / End 到首尾。</p>
+<p class="hp-value">已确认：<strong class="hp-saved">09:00</strong></p>
+<div class="hp-frame"><div class="hp-band" aria-hidden="true"></div><div class="hp-wheel" role="listbox" tabindex="0" aria-labelledby="hp-light-title" aria-describedby="hp-light-hint" aria-activedescendant="hp-light-9"><div class="hp-option" id="hp-light-0" role="option" aria-selected="false" data-hour="0" aria-label="00 时">00<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-1" role="option" aria-selected="false" data-hour="1" aria-label="01 时">01<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-2" role="option" aria-selected="false" data-hour="2" aria-label="02 时">02<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-3" role="option" aria-selected="false" data-hour="3" aria-label="03 时">03<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-4" role="option" aria-selected="false" data-hour="4" aria-label="04 时">04<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-5" role="option" aria-selected="false" data-hour="5" aria-label="05 时">05<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-6" role="option" aria-selected="false" data-hour="6" aria-label="06 时">06<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-7" role="option" aria-selected="false" data-hour="7" aria-label="07 时">07<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-8" role="option" aria-selected="false" data-hour="8" aria-label="08 时">08<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-9" role="option" aria-selected="true" data-hour="9" aria-label="09 时">09<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-10" role="option" aria-selected="false" data-hour="10" aria-label="10 时">10<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-11" role="option" aria-selected="false" data-hour="11" aria-label="11 时">11<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-12" role="option" aria-selected="false" data-hour="12" aria-label="12 时">12<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-13" role="option" aria-selected="false" data-hour="13" aria-label="13 时">13<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-14" role="option" aria-selected="false" data-hour="14" aria-label="14 时">14<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-15" role="option" aria-selected="false" data-hour="15" aria-label="15 时">15<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-16" role="option" aria-selected="false" data-hour="16" aria-label="16 时">16<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-17" role="option" aria-selected="false" data-hour="17" aria-label="17 时">17<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-18" role="option" aria-selected="false" data-hour="18" aria-label="18 时">18<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-19" role="option" aria-selected="false" data-hour="19" aria-label="19 时">19<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-20" role="option" aria-selected="false" data-hour="20" aria-label="20 时">20<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-21" role="option" aria-selected="false" data-hour="21" aria-label="21 时">21<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-22" role="option" aria-selected="false" data-hour="22" aria-label="22 时">22<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light-23" role="option" aria-selected="false" data-hour="23" aria-label="23 时">23<small aria-hidden="true">时</small></div></div></div>
+<div class="hp-actions"><button type="button" class="hp-cancel" disabled>取消</button><button type="button" class="hp-confirm" disabled>确认</button></div>
+<p class="hp-result" role="status" aria-live="polite">交互演示需要 JavaScript；已确认值为 09:00。</p></article><article class="hp-card hc" data-hour-picker="9" data-hour-mode="light_hc">
+<p class="hp-mode">浅色 · 增强对比度 · Sheet 内容示例</p><h3 id="hp-light_hc-title">选择提醒小时</h3>
+<p class="hp-hint" id="hp-light_hc-hint">24 小时制 · 首尾循环，每次选择一个整点。滚动或使用 ↑ ↓，Home / End 到首尾。</p>
+<p class="hp-value">已确认：<strong class="hp-saved">09:00</strong></p>
+<div class="hp-frame"><div class="hp-band" aria-hidden="true"></div><div class="hp-wheel" role="listbox" tabindex="0" aria-labelledby="hp-light_hc-title" aria-describedby="hp-light_hc-hint" aria-activedescendant="hp-light_hc-9"><div class="hp-option" id="hp-light_hc-0" role="option" aria-selected="false" data-hour="0" aria-label="00 时">00<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-1" role="option" aria-selected="false" data-hour="1" aria-label="01 时">01<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-2" role="option" aria-selected="false" data-hour="2" aria-label="02 时">02<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-3" role="option" aria-selected="false" data-hour="3" aria-label="03 时">03<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-4" role="option" aria-selected="false" data-hour="4" aria-label="04 时">04<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-5" role="option" aria-selected="false" data-hour="5" aria-label="05 时">05<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-6" role="option" aria-selected="false" data-hour="6" aria-label="06 时">06<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-7" role="option" aria-selected="false" data-hour="7" aria-label="07 时">07<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-8" role="option" aria-selected="false" data-hour="8" aria-label="08 时">08<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-9" role="option" aria-selected="true" data-hour="9" aria-label="09 时">09<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-10" role="option" aria-selected="false" data-hour="10" aria-label="10 时">10<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-11" role="option" aria-selected="false" data-hour="11" aria-label="11 时">11<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-12" role="option" aria-selected="false" data-hour="12" aria-label="12 时">12<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-13" role="option" aria-selected="false" data-hour="13" aria-label="13 时">13<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-14" role="option" aria-selected="false" data-hour="14" aria-label="14 时">14<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-15" role="option" aria-selected="false" data-hour="15" aria-label="15 时">15<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-16" role="option" aria-selected="false" data-hour="16" aria-label="16 时">16<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-17" role="option" aria-selected="false" data-hour="17" aria-label="17 时">17<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-18" role="option" aria-selected="false" data-hour="18" aria-label="18 时">18<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-19" role="option" aria-selected="false" data-hour="19" aria-label="19 时">19<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-20" role="option" aria-selected="false" data-hour="20" aria-label="20 时">20<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-21" role="option" aria-selected="false" data-hour="21" aria-label="21 时">21<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-22" role="option" aria-selected="false" data-hour="22" aria-label="22 时">22<small aria-hidden="true">时</small></div><div class="hp-option" id="hp-light_hc-23" role="option" aria-selected="false" data-hour="23" aria-label="23 时">23<small aria-hidden="true">时</small></div></div></div>
+<div class="hp-actions"><button type="button" class="hp-cancel" disabled>取消</button><button type="button" class="hp-confirm" disabled>确认</button></div>
+<p class="hp-result" role="status" aria-live="polite">交互演示需要 JavaScript；已确认值为 09:00。</p></article></div><p><a href="standards.html#hour-picker">查看尺寸、状态、12 小时制与原生验收标准 →</a></p></section><section class="hp-section" id="time-picker"><h2>小时＋分钟 · 双列滚轮</h2><p>小时 00–23，分钟 00–59，每次 1 分钟；两列分别滚动，共同确认。小时23↔00、分钟59↔00首尾循环；分钟循环不自动改变小时。刷新恢复 09:30。</p><div class="hp-grid"><article class="hp-card " data-time-picker="9" data-initial-minute="30" data-time-mode="light">
+<p class="hp-mode">浅色 · Sheet 内容示例</p><h3 id="tp-light-title">选择提醒时间</h3>
+<p class="hp-hint" id="tp-light-hint">24 小时制 · 分钟步进 1 · 首尾循环。分别滚动两列，Tab 切换，↑ ↓ 调整，Home / End 到首尾。</p>
+<p class="hp-value">已确认：<strong class="hp-saved">09:30</strong></p>
+<div class="hp-columns"><div><span class="hp-column-label" id="tp-light-time-hour-label">小时</span><div class="hp-frame"><div class="hp-band" aria-hidden="true"></div><div class="hp-wheel hp-time-wheel" data-unit="time-hour" role="listbox" tabindex="0" aria-labelledby="tp-light-title tp-light-time-hour-label" aria-describedby="tp-light-hint" aria-activedescendant="tp-light-time-hour-9"><div class="hp-option" role="option" id="tp-light-time-hour-0" data-time-hour="0" data-value="0" aria-selected="false" aria-label="00 小时">00</div><div class="hp-option" role="option" id="tp-light-time-hour-1" data-time-hour="1" data-value="1" aria-selected="false" aria-label="01 小时">01</div><div class="hp-option" role="option" id="tp-light-time-hour-2" data-time-hour="2" data-value="2" aria-selected="false" aria-label="02 小时">02</div><div class="hp-option" role="option" id="tp-light-time-hour-3" data-time-hour="3" data-value="3" aria-selected="false" aria-label="03 小时">03</div><div class="hp-option" role="option" id="tp-light-time-hour-4" data-time-hour="4" data-value="4" aria-selected="false" aria-label="04 小时">04</div><div class="hp-option" role="option" id="tp-light-time-hour-5" data-time-hour="5" data-value="5" aria-selected="false" aria-label="05 小时">05</div><div class="hp-option" role="option" id="tp-light-time-hour-6" data-time-hour="6" data-value="6" aria-selected="false" aria-label="06 小时">06</div><div class="hp-option" role="option" id="tp-light-time-hour-7" data-time-hour="7" data-value="7" aria-selected="false" aria-label="07 小时">07</div><div class="hp-option" role="option" id="tp-light-time-hour-8" data-time-hour="8" data-value="8" aria-selected="false" aria-label="08 小时">08</div><div class="hp-option" role="option" id="tp-light-time-hour-9" data-time-hour="9" data-value="9" aria-selected="true" aria-label="09 小时">09</div><div class="hp-option" role="option" id="tp-light-time-hour-10" data-time-hour="10" data-value="10" aria-selected="false" aria-label="10 小时">10</div><div class="hp-option" role="option" id="tp-light-time-hour-11" data-time-hour="11" data-value="11" aria-selected="false" aria-label="11 小时">11</div><div class="hp-option" role="option" id="tp-light-time-hour-12" data-time-hour="12" data-value="12" aria-selected="false" aria-label="12 小时">12</div><div class="hp-option" role="option" id="tp-light-time-hour-13" data-time-hour="13" data-value="13" aria-selected="false" aria-label="13 小时">13</div><div class="hp-option" role="option" id="tp-light-time-hour-14" data-time-hour="14" data-value="14" aria-selected="false" aria-label="14 小时">14</div><div class="hp-option" role="option" id="tp-light-time-hour-15" data-time-hour="15" data-value="15" aria-selected="false" aria-label="15 小时">15</div><div class="hp-option" role="option" id="tp-light-time-hour-16" data-time-hour="16" data-value="16" aria-selected="false" aria-label="16 小时">16</div><div class="hp-option" role="option" id="tp-light-time-hour-17" data-time-hour="17" data-value="17" aria-selected="false" aria-label="17 小时">17</div><div class="hp-option" role="option" id="tp-light-time-hour-18" data-time-hour="18" data-value="18" aria-selected="false" aria-label="18 小时">18</div><div class="hp-option" role="option" id="tp-light-time-hour-19" data-time-hour="19" data-value="19" aria-selected="false" aria-label="19 小时">19</div><div class="hp-option" role="option" id="tp-light-time-hour-20" data-time-hour="20" data-value="20" aria-selected="false" aria-label="20 小时">20</div><div class="hp-option" role="option" id="tp-light-time-hour-21" data-time-hour="21" data-value="21" aria-selected="false" aria-label="21 小时">21</div><div class="hp-option" role="option" id="tp-light-time-hour-22" data-time-hour="22" data-value="22" aria-selected="false" aria-label="22 小时">22</div><div class="hp-option" role="option" id="tp-light-time-hour-23" data-time-hour="23" data-value="23" aria-selected="false" aria-label="23 小时">23</div></div></div></div><div><span class="hp-column-label" id="tp-light-minute-label">分钟</span><div class="hp-frame"><div class="hp-band" aria-hidden="true"></div><div class="hp-wheel hp-time-wheel" data-unit="minute" role="listbox" tabindex="0" aria-labelledby="tp-light-title tp-light-minute-label" aria-describedby="tp-light-hint" aria-activedescendant="tp-light-minute-30"><div class="hp-option" role="option" id="tp-light-minute-0" data-minute="0" data-value="0" aria-selected="false" aria-label="00 分钟">00</div><div class="hp-option" role="option" id="tp-light-minute-1" data-minute="1" data-value="1" aria-selected="false" aria-label="01 分钟">01</div><div class="hp-option" role="option" id="tp-light-minute-2" data-minute="2" data-value="2" aria-selected="false" aria-label="02 分钟">02</div><div class="hp-option" role="option" id="tp-light-minute-3" data-minute="3" data-value="3" aria-selected="false" aria-label="03 分钟">03</div><div class="hp-option" role="option" id="tp-light-minute-4" data-minute="4" data-value="4" aria-selected="false" aria-label="04 分钟">04</div><div class="hp-option" role="option" id="tp-light-minute-5" data-minute="5" data-value="5" aria-selected="false" aria-label="05 分钟">05</div><div class="hp-option" role="option" id="tp-light-minute-6" data-minute="6" data-value="6" aria-selected="false" aria-label="06 分钟">06</div><div class="hp-option" role="option" id="tp-light-minute-7" data-minute="7" data-value="7" aria-selected="false" aria-label="07 分钟">07</div><div class="hp-option" role="option" id="tp-light-minute-8" data-minute="8" data-value="8" aria-selected="false" aria-label="08 分钟">08</div><div class="hp-option" role="option" id="tp-light-minute-9" data-minute="9" data-value="9" aria-selected="false" aria-label="09 分钟">09</div><div class="hp-option" role="option" id="tp-light-minute-10" data-minute="10" data-value="10" aria-selected="false" aria-label="10 分钟">10</div><div class="hp-option" role="option" id="tp-light-minute-11" data-minute="11" data-value="11" aria-selected="false" aria-label="11 分钟">11</div><div class="hp-option" role="option" id="tp-light-minute-12" data-minute="12" data-value="12" aria-selected="false" aria-label="12 分钟">12</div><div class="hp-option" role="option" id="tp-light-minute-13" data-minute="13" data-value="13" aria-selected="false" aria-label="13 分钟">13</div><div class="hp-option" role="option" id="tp-light-minute-14" data-minute="14" data-value="14" aria-selected="false" aria-label="14 分钟">14</div><div class="hp-option" role="option" id="tp-light-minute-15" data-minute="15" data-value="15" aria-selected="false" aria-label="15 分钟">15</div><div class="hp-option" role="option" id="tp-light-minute-16" data-minute="16" data-value="16" aria-selected="false" aria-label="16 分钟">16</div><div class="hp-option" role="option" id="tp-light-minute-17" data-minute="17" data-value="17" aria-selected="false" aria-label="17 分钟">17</div><div class="hp-option" role="option" id="tp-light-minute-18" data-minute="18" data-value="18" aria-selected="false" aria-label="18 分钟">18</div><div class="hp-option" role="option" id="tp-light-minute-19" data-minute="19" data-value="19" aria-selected="false" aria-label="19 分钟">19</div><div class="hp-option" role="option" id="tp-light-minute-20" data-minute="20" data-value="20" aria-selected="false" aria-label="20 分钟">20</div><div class="hp-option" role="option" id="tp-light-minute-21" data-minute="21" data-value="21" aria-selected="false" aria-label="21 分钟">21</div><div class="hp-option" role="option" id="tp-light-minute-22" data-minute="22" data-value="22" aria-selected="false" aria-label="22 分钟">22</div><div class="hp-option" role="option" id="tp-light-minute-23" data-minute="23" data-value="23" aria-selected="false" aria-label="23 分钟">23</div><div class="hp-option" role="option" id="tp-light-minute-24" data-minute="24" data-value="24" aria-selected="false" aria-label="24 分钟">24</div><div class="hp-option" role="option" id="tp-light-minute-25" data-minute="25" data-value="25" aria-selected="false" aria-label="25 分钟">25</div><div class="hp-option" role="option" id="tp-light-minute-26" data-minute="26" data-value="26" aria-selected="false" aria-label="26 分钟">26</div><div class="hp-option" role="option" id="tp-light-minute-27" data-minute="27" data-value="27" aria-selected="false" aria-label="27 分钟">27</div><div class="hp-option" role="option" id="tp-light-minute-28" data-minute="28" data-value="28" aria-selected="false" aria-label="28 分钟">28</div><div class="hp-option" role="option" id="tp-light-minute-29" data-minute="29" data-value="29" aria-selected="false" aria-label="29 分钟">29</div><div class="hp-option" role="option" id="tp-light-minute-30" data-minute="30" data-value="30" aria-selected="true" aria-label="30 分钟">30</div><div class="hp-option" role="option" id="tp-light-minute-31" data-minute="31" data-value="31" aria-selected="false" aria-label="31 分钟">31</div><div class="hp-option" role="option" id="tp-light-minute-32" data-minute="32" data-value="32" aria-selected="false" aria-label="32 分钟">32</div><div class="hp-option" role="option" id="tp-light-minute-33" data-minute="33" data-value="33" aria-selected="false" aria-label="33 分钟">33</div><div class="hp-option" role="option" id="tp-light-minute-34" data-minute="34" data-value="34" aria-selected="false" aria-label="34 分钟">34</div><div class="hp-option" role="option" id="tp-light-minute-35" data-minute="35" data-value="35" aria-selected="false" aria-label="35 分钟">35</div><div class="hp-option" role="option" id="tp-light-minute-36" data-minute="36" data-value="36" aria-selected="false" aria-label="36 分钟">36</div><div class="hp-option" role="option" id="tp-light-minute-37" data-minute="37" data-value="37" aria-selected="false" aria-label="37 分钟">37</div><div class="hp-option" role="option" id="tp-light-minute-38" data-minute="38" data-value="38" aria-selected="false" aria-label="38 分钟">38</div><div class="hp-option" role="option" id="tp-light-minute-39" data-minute="39" data-value="39" aria-selected="false" aria-label="39 分钟">39</div><div class="hp-option" role="option" id="tp-light-minute-40" data-minute="40" data-value="40" aria-selected="false" aria-label="40 分钟">40</div><div class="hp-option" role="option" id="tp-light-minute-41" data-minute="41" data-value="41" aria-selected="false" aria-label="41 分钟">41</div><div class="hp-option" role="option" id="tp-light-minute-42" data-minute="42" data-value="42" aria-selected="false" aria-label="42 分钟">42</div><div class="hp-option" role="option" id="tp-light-minute-43" data-minute="43" data-value="43" aria-selected="false" aria-label="43 分钟">43</div><div class="hp-option" role="option" id="tp-light-minute-44" data-minute="44" data-value="44" aria-selected="false" aria-label="44 分钟">44</div><div class="hp-option" role="option" id="tp-light-minute-45" data-minute="45" data-value="45" aria-selected="false" aria-label="45 分钟">45</div><div class="hp-option" role="option" id="tp-light-minute-46" data-minute="46" data-value="46" aria-selected="false" aria-label="46 分钟">46</div><div class="hp-option" role="option" id="tp-light-minute-47" data-minute="47" data-value="47" aria-selected="false" aria-label="47 分钟">47</div><div class="hp-option" role="option" id="tp-light-minute-48" data-minute="48" data-value="48" aria-selected="false" aria-label="48 分钟">48</div><div class="hp-option" role="option" id="tp-light-minute-49" data-minute="49" data-value="49" aria-selected="false" aria-label="49 分钟">49</div><div class="hp-option" role="option" id="tp-light-minute-50" data-minute="50" data-value="50" aria-selected="false" aria-label="50 分钟">50</div><div class="hp-option" role="option" id="tp-light-minute-51" data-minute="51" data-value="51" aria-selected="false" aria-label="51 分钟">51</div><div class="hp-option" role="option" id="tp-light-minute-52" data-minute="52" data-value="52" aria-selected="false" aria-label="52 分钟">52</div><div class="hp-option" role="option" id="tp-light-minute-53" data-minute="53" data-value="53" aria-selected="false" aria-label="53 分钟">53</div><div class="hp-option" role="option" id="tp-light-minute-54" data-minute="54" data-value="54" aria-selected="false" aria-label="54 分钟">54</div><div class="hp-option" role="option" id="tp-light-minute-55" data-minute="55" data-value="55" aria-selected="false" aria-label="55 分钟">55</div><div class="hp-option" role="option" id="tp-light-minute-56" data-minute="56" data-value="56" aria-selected="false" aria-label="56 分钟">56</div><div class="hp-option" role="option" id="tp-light-minute-57" data-minute="57" data-value="57" aria-selected="false" aria-label="57 分钟">57</div><div class="hp-option" role="option" id="tp-light-minute-58" data-minute="58" data-value="58" aria-selected="false" aria-label="58 分钟">58</div><div class="hp-option" role="option" id="tp-light-minute-59" data-minute="59" data-value="59" aria-selected="false" aria-label="59 分钟">59</div></div></div></div></div>
+<div class="hp-actions"><button type="button" class="hp-cancel" disabled>取消</button><button type="button" class="hp-confirm" disabled>确认</button></div>
+<p class="hp-result" role="status" aria-live="polite">交互演示需要 JavaScript；已确认值为 09:30。</p></article><article class="hp-card hc" data-time-picker="9" data-initial-minute="30" data-time-mode="light_hc">
+<p class="hp-mode">浅色 · 增强对比度 · Sheet 内容示例</p><h3 id="tp-light_hc-title">选择提醒时间</h3>
+<p class="hp-hint" id="tp-light_hc-hint">24 小时制 · 分钟步进 1 · 首尾循环。分别滚动两列，Tab 切换，↑ ↓ 调整，Home / End 到首尾。</p>
+<p class="hp-value">已确认：<strong class="hp-saved">09:30</strong></p>
+<div class="hp-columns"><div><span class="hp-column-label" id="tp-light_hc-time-hour-label">小时</span><div class="hp-frame"><div class="hp-band" aria-hidden="true"></div><div class="hp-wheel hp-time-wheel" data-unit="time-hour" role="listbox" tabindex="0" aria-labelledby="tp-light_hc-title tp-light_hc-time-hour-label" aria-describedby="tp-light_hc-hint" aria-activedescendant="tp-light_hc-time-hour-9"><div class="hp-option" role="option" id="tp-light_hc-time-hour-0" data-time-hour="0" data-value="0" aria-selected="false" aria-label="00 小时">00</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-1" data-time-hour="1" data-value="1" aria-selected="false" aria-label="01 小时">01</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-2" data-time-hour="2" data-value="2" aria-selected="false" aria-label="02 小时">02</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-3" data-time-hour="3" data-value="3" aria-selected="false" aria-label="03 小时">03</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-4" data-time-hour="4" data-value="4" aria-selected="false" aria-label="04 小时">04</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-5" data-time-hour="5" data-value="5" aria-selected="false" aria-label="05 小时">05</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-6" data-time-hour="6" data-value="6" aria-selected="false" aria-label="06 小时">06</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-7" data-time-hour="7" data-value="7" aria-selected="false" aria-label="07 小时">07</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-8" data-time-hour="8" data-value="8" aria-selected="false" aria-label="08 小时">08</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-9" data-time-hour="9" data-value="9" aria-selected="true" aria-label="09 小时">09</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-10" data-time-hour="10" data-value="10" aria-selected="false" aria-label="10 小时">10</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-11" data-time-hour="11" data-value="11" aria-selected="false" aria-label="11 小时">11</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-12" data-time-hour="12" data-value="12" aria-selected="false" aria-label="12 小时">12</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-13" data-time-hour="13" data-value="13" aria-selected="false" aria-label="13 小时">13</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-14" data-time-hour="14" data-value="14" aria-selected="false" aria-label="14 小时">14</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-15" data-time-hour="15" data-value="15" aria-selected="false" aria-label="15 小时">15</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-16" data-time-hour="16" data-value="16" aria-selected="false" aria-label="16 小时">16</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-17" data-time-hour="17" data-value="17" aria-selected="false" aria-label="17 小时">17</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-18" data-time-hour="18" data-value="18" aria-selected="false" aria-label="18 小时">18</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-19" data-time-hour="19" data-value="19" aria-selected="false" aria-label="19 小时">19</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-20" data-time-hour="20" data-value="20" aria-selected="false" aria-label="20 小时">20</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-21" data-time-hour="21" data-value="21" aria-selected="false" aria-label="21 小时">21</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-22" data-time-hour="22" data-value="22" aria-selected="false" aria-label="22 小时">22</div><div class="hp-option" role="option" id="tp-light_hc-time-hour-23" data-time-hour="23" data-value="23" aria-selected="false" aria-label="23 小时">23</div></div></div></div><div><span class="hp-column-label" id="tp-light_hc-minute-label">分钟</span><div class="hp-frame"><div class="hp-band" aria-hidden="true"></div><div class="hp-wheel hp-time-wheel" data-unit="minute" role="listbox" tabindex="0" aria-labelledby="tp-light_hc-title tp-light_hc-minute-label" aria-describedby="tp-light_hc-hint" aria-activedescendant="tp-light_hc-minute-30"><div class="hp-option" role="option" id="tp-light_hc-minute-0" data-minute="0" data-value="0" aria-selected="false" aria-label="00 分钟">00</div><div class="hp-option" role="option" id="tp-light_hc-minute-1" data-minute="1" data-value="1" aria-selected="false" aria-label="01 分钟">01</div><div class="hp-option" role="option" id="tp-light_hc-minute-2" data-minute="2" data-value="2" aria-selected="false" aria-label="02 分钟">02</div><div class="hp-option" role="option" id="tp-light_hc-minute-3" data-minute="3" data-value="3" aria-selected="false" aria-label="03 分钟">03</div><div class="hp-option" role="option" id="tp-light_hc-minute-4" data-minute="4" data-value="4" aria-selected="false" aria-label="04 分钟">04</div><div class="hp-option" role="option" id="tp-light_hc-minute-5" data-minute="5" data-value="5" aria-selected="false" aria-label="05 分钟">05</div><div class="hp-option" role="option" id="tp-light_hc-minute-6" data-minute="6" data-value="6" aria-selected="false" aria-label="06 分钟">06</div><div class="hp-option" role="option" id="tp-light_hc-minute-7" data-minute="7" data-value="7" aria-selected="false" aria-label="07 分钟">07</div><div class="hp-option" role="option" id="tp-light_hc-minute-8" data-minute="8" data-value="8" aria-selected="false" aria-label="08 分钟">08</div><div class="hp-option" role="option" id="tp-light_hc-minute-9" data-minute="9" data-value="9" aria-selected="false" aria-label="09 分钟">09</div><div class="hp-option" role="option" id="tp-light_hc-minute-10" data-minute="10" data-value="10" aria-selected="false" aria-label="10 分钟">10</div><div class="hp-option" role="option" id="tp-light_hc-minute-11" data-minute="11" data-value="11" aria-selected="false" aria-label="11 分钟">11</div><div class="hp-option" role="option" id="tp-light_hc-minute-12" data-minute="12" data-value="12" aria-selected="false" aria-label="12 分钟">12</div><div class="hp-option" role="option" id="tp-light_hc-minute-13" data-minute="13" data-value="13" aria-selected="false" aria-label="13 分钟">13</div><div class="hp-option" role="option" id="tp-light_hc-minute-14" data-minute="14" data-value="14" aria-selected="false" aria-label="14 分钟">14</div><div class="hp-option" role="option" id="tp-light_hc-minute-15" data-minute="15" data-value="15" aria-selected="false" aria-label="15 分钟">15</div><div class="hp-option" role="option" id="tp-light_hc-minute-16" data-minute="16" data-value="16" aria-selected="false" aria-label="16 分钟">16</div><div class="hp-option" role="option" id="tp-light_hc-minute-17" data-minute="17" data-value="17" aria-selected="false" aria-label="17 分钟">17</div><div class="hp-option" role="option" id="tp-light_hc-minute-18" data-minute="18" data-value="18" aria-selected="false" aria-label="18 分钟">18</div><div class="hp-option" role="option" id="tp-light_hc-minute-19" data-minute="19" data-value="19" aria-selected="false" aria-label="19 分钟">19</div><div class="hp-option" role="option" id="tp-light_hc-minute-20" data-minute="20" data-value="20" aria-selected="false" aria-label="20 分钟">20</div><div class="hp-option" role="option" id="tp-light_hc-minute-21" data-minute="21" data-value="21" aria-selected="false" aria-label="21 分钟">21</div><div class="hp-option" role="option" id="tp-light_hc-minute-22" data-minute="22" data-value="22" aria-selected="false" aria-label="22 分钟">22</div><div class="hp-option" role="option" id="tp-light_hc-minute-23" data-minute="23" data-value="23" aria-selected="false" aria-label="23 分钟">23</div><div class="hp-option" role="option" id="tp-light_hc-minute-24" data-minute="24" data-value="24" aria-selected="false" aria-label="24 分钟">24</div><div class="hp-option" role="option" id="tp-light_hc-minute-25" data-minute="25" data-value="25" aria-selected="false" aria-label="25 分钟">25</div><div class="hp-option" role="option" id="tp-light_hc-minute-26" data-minute="26" data-value="26" aria-selected="false" aria-label="26 分钟">26</div><div class="hp-option" role="option" id="tp-light_hc-minute-27" data-minute="27" data-value="27" aria-selected="false" aria-label="27 分钟">27</div><div class="hp-option" role="option" id="tp-light_hc-minute-28" data-minute="28" data-value="28" aria-selected="false" aria-label="28 分钟">28</div><div class="hp-option" role="option" id="tp-light_hc-minute-29" data-minute="29" data-value="29" aria-selected="false" aria-label="29 分钟">29</div><div class="hp-option" role="option" id="tp-light_hc-minute-30" data-minute="30" data-value="30" aria-selected="true" aria-label="30 分钟">30</div><div class="hp-option" role="option" id="tp-light_hc-minute-31" data-minute="31" data-value="31" aria-selected="false" aria-label="31 分钟">31</div><div class="hp-option" role="option" id="tp-light_hc-minute-32" data-minute="32" data-value="32" aria-selected="false" aria-label="32 分钟">32</div><div class="hp-option" role="option" id="tp-light_hc-minute-33" data-minute="33" data-value="33" aria-selected="false" aria-label="33 分钟">33</div><div class="hp-option" role="option" id="tp-light_hc-minute-34" data-minute="34" data-value="34" aria-selected="false" aria-label="34 分钟">34</div><div class="hp-option" role="option" id="tp-light_hc-minute-35" data-minute="35" data-value="35" aria-selected="false" aria-label="35 分钟">35</div><div class="hp-option" role="option" id="tp-light_hc-minute-36" data-minute="36" data-value="36" aria-selected="false" aria-label="36 分钟">36</div><div class="hp-option" role="option" id="tp-light_hc-minute-37" data-minute="37" data-value="37" aria-selected="false" aria-label="37 分钟">37</div><div class="hp-option" role="option" id="tp-light_hc-minute-38" data-minute="38" data-value="38" aria-selected="false" aria-label="38 分钟">38</div><div class="hp-option" role="option" id="tp-light_hc-minute-39" data-minute="39" data-value="39" aria-selected="false" aria-label="39 分钟">39</div><div class="hp-option" role="option" id="tp-light_hc-minute-40" data-minute="40" data-value="40" aria-selected="false" aria-label="40 分钟">40</div><div class="hp-option" role="option" id="tp-light_hc-minute-41" data-minute="41" data-value="41" aria-selected="false" aria-label="41 分钟">41</div><div class="hp-option" role="option" id="tp-light_hc-minute-42" data-minute="42" data-value="42" aria-selected="false" aria-label="42 分钟">42</div><div class="hp-option" role="option" id="tp-light_hc-minute-43" data-minute="43" data-value="43" aria-selected="false" aria-label="43 分钟">43</div><div class="hp-option" role="option" id="tp-light_hc-minute-44" data-minute="44" data-value="44" aria-selected="false" aria-label="44 分钟">44</div><div class="hp-option" role="option" id="tp-light_hc-minute-45" data-minute="45" data-value="45" aria-selected="false" aria-label="45 分钟">45</div><div class="hp-option" role="option" id="tp-light_hc-minute-46" data-minute="46" data-value="46" aria-selected="false" aria-label="46 分钟">46</div><div class="hp-option" role="option" id="tp-light_hc-minute-47" data-minute="47" data-value="47" aria-selected="false" aria-label="47 分钟">47</div><div class="hp-option" role="option" id="tp-light_hc-minute-48" data-minute="48" data-value="48" aria-selected="false" aria-label="48 分钟">48</div><div class="hp-option" role="option" id="tp-light_hc-minute-49" data-minute="49" data-value="49" aria-selected="false" aria-label="49 分钟">49</div><div class="hp-option" role="option" id="tp-light_hc-minute-50" data-minute="50" data-value="50" aria-selected="false" aria-label="50 分钟">50</div><div class="hp-option" role="option" id="tp-light_hc-minute-51" data-minute="51" data-value="51" aria-selected="false" aria-label="51 分钟">51</div><div class="hp-option" role="option" id="tp-light_hc-minute-52" data-minute="52" data-value="52" aria-selected="false" aria-label="52 分钟">52</div><div class="hp-option" role="option" id="tp-light_hc-minute-53" data-minute="53" data-value="53" aria-selected="false" aria-label="53 分钟">53</div><div class="hp-option" role="option" id="tp-light_hc-minute-54" data-minute="54" data-value="54" aria-selected="false" aria-label="54 分钟">54</div><div class="hp-option" role="option" id="tp-light_hc-minute-55" data-minute="55" data-value="55" aria-selected="false" aria-label="55 分钟">55</div><div class="hp-option" role="option" id="tp-light_hc-minute-56" data-minute="56" data-value="56" aria-selected="false" aria-label="56 分钟">56</div><div class="hp-option" role="option" id="tp-light_hc-minute-57" data-minute="57" data-value="57" aria-selected="false" aria-label="57 分钟">57</div><div class="hp-option" role="option" id="tp-light_hc-minute-58" data-minute="58" data-value="58" aria-selected="false" aria-label="58 分钟">58</div><div class="hp-option" role="option" id="tp-light_hc-minute-59" data-minute="59" data-value="59" aria-selected="false" aria-label="59 分钟">59</div></div></div></div></div>
+<div class="hp-actions"><button type="button" class="hp-cancel" disabled>取消</button><button type="button" class="hp-confirm" disabled>确认</button></div>
+<p class="hp-result" role="status" aria-live="polite">交互演示需要 JavaScript；已确认值为 09:30。</p></article></div><p><a href="standards.html#time-picker">查看分钟步进、双列提交与验收规则 →</a></p></section><section class="notes cc-section" id="components-light"><h3>可操作组件 · light</h3><p>本页只改变浏览器内的演示状态。禁用项无法写入；加载使用固定本地数据。原生组件实现仍待 iOS 工程。</p>
+<div data-cc-demo class="cc-grid">
+<div class="cc-card"><h4>选择与数值</h4><label class="cc-choice"><input data-cc-switch type="checkbox" role="switch"> 通知开关</label><label class="cc-choice"><input data-cc-check type="checkbox"> 同步日历</label><label class="cc-choice"><input type="checkbox" disabled> 禁用选项</label><fieldset class="cc-fieldset"><legend>通知频率</legend><label class="cc-choice"><input data-cc-radio type="radio" name="frequency-light" value="每天" checked> 每天</label><label class="cc-choice"><input data-cc-radio type="radio" name="frequency-light" value="每周"> 每周</label></fieldset><fieldset class="cc-fieldset"><legend>视图</legend><label class="cc-choice"><input data-cc-segment type="radio" name="view-light" value="列表" checked> 列表</label><label class="cc-choice"><input data-cc-segment type="radio" name="view-light" value="日历"> 日历</label></fieldset><label>亮度 <output data-cc-range-value>50%</output><input data-cc-range type="range" min="0" max="100" value="50"></label><div class="cc-row"><span>数量</span><button type="button" data-cc-down aria-label="数量减一">−</button><output data-cc-step>2</output><button type="button" data-cc-up aria-label="数量加一">＋</button></div></div>
+<div class="cc-card"><h4>输入与结果</h4><label>搜索演示数据<input data-cc-search type="search" autocomplete="off"></label><button type="button" data-cc-clear>清除</button><p data-cc-search-result aria-live="polite"></p><label>名称 <span aria-hidden="true">*</span><input data-cc-required type="text" required aria-describedby="error-light"></label><p class="cc-error" id="error-light" data-cc-error aria-live="polite"></p><button type="button" data-cc-validate>验证名称</button><p><label>禁用输入<input type="text" value="不可修改" disabled></label></p><div class="cc-row"><button type="button" data-cc-load>加载</button><button type="button" data-cc-load-mode="success">成功</button><button type="button" data-cc-load-mode="empty">空数据</button><button type="button" data-cc-load-mode="error">失败／重试</button></div><p data-cc-load-result aria-live="polite">选择本地演示状态</p></div>
+<div class="cc-card"><h4>动作与反馈</h4><div class="cc-row"><button type="button" data-cc-open-confirm class="cc-danger">删除项目…</button><button type="button" data-cc-open-menu>更多操作</button><button type="button" data-cc-open-sheet>选择时段</button></div><p>已选时段：<strong data-cc-chosen>上午</strong></p><p class="cc-status" data-cc-status role="status" aria-live="polite">等待操作</p><label>进度示意 <progress max="100" value="60">60%</progress> 60%</label><p>加载占位与活动状态有文字说明。</p><div class="cc-skeleton" aria-hidden="true"></div><p>🔒 无权限：请联系管理员取得访问权限。</p><p>✓ 操作通知包含明确文字。</p></div>
+<dialog class="cc-dialog" data-cc-confirm aria-labelledby="confirm-title-light"><h4 id="confirm-title-light">删除演示项目？</h4><p>此操作会更新本页演示计数。</p><menu><button type="button" data-cc-confirm-cancel>取消</button><button type="button" class="cc-danger" data-cc-confirm-ok>确认删除</button></menu></dialog>
+<dialog class="cc-dialog" data-cc-menu aria-label="更多操作"><h4>更多操作</h4><button type="button" data-cc-action="分享">分享</button><button type="button" data-cc-action="复制">复制</button><button type="button" data-cc-menu-cancel>取消</button></dialog>
+<dialog class="cc-dialog" data-cc-sheet aria-label="选择时段"><h4>选择时段</h4><label class="cc-choice"><input data-cc-option type="radio" name="time-light" value="上午"> 上午</label><label class="cc-choice"><input data-cc-option type="radio" name="time-light" value="下午"> 下午</label><menu><button type="button" data-cc-sheet-cancel>取消</button><button type="button" class="cc-primary" data-cc-sheet-ok>保存</button></menu></dialog>
+</div><noscript>这些交互演示需要 JavaScript；当前只能查看静态规范。</noscript></section><div class="foot">DIRECTION B · 藍染 — AIZOME · JP MINIMAL UI KIT 2026</div>
+</div>
+<script>(() => {
+
+function wrapWheelIndex(index, count) {
+  return ((Math.round(index) % count) + count) % count;
+}
+function recenterWheelPosition(position, count) {
+  // Preserve sub-row position when relocating an equivalent repeating segment.
+  return 3 * count + ((position % count) + count) % count;
+}
+function createWheelState(columns, initial) {
+  let committed = [...initial];
+  let draft = columns.map((values, i) => values.indexOf(initial[i]));
+  if (draft.some(i => i < 0)) throw new RangeError('Initial value is not selectable');
+  const moving = columns.map(() => false);
+  return {
+    index: col => draft[col],
+    values: () => draft.map((i, col) => columns[col][i]),
+    saved: () => [...committed],
+    ready: () => moving.every(value => !value),
+    begin: col => { moving[col] = true; },
+    move: (col, index) => { draft[col] = wrapWheelIndex(index, columns[col].length); },
+    settle: col => { moving[col] = false; },
+    commit() {
+      if (!this.ready()) return false;
+      committed = this.values(); return true;
+    },
+    cancel() {
+      draft = columns.map((values, i) => values.indexOf(committed[i]));
+      moving.fill(false);
+    }
+  };
+}
+
+  document.querySelectorAll('[data-hour-picker], [data-time-picker]').forEach(card => {
+    const wheels = Array.from(card.querySelectorAll('.hp-wheel'));
+    const optionGroups = wheels.map(wheel => Array.from(wheel.querySelectorAll('[role="option"]')));
+    const initial = card.hasAttribute('data-time-picker')
+      ? [Number(card.dataset.timePicker), Number(card.dataset.initialMinute)]
+      : [Number(card.dataset.hourPicker)];
+    const state = createWheelState(optionGroups.map(options => options.map((o, i) => Number(o.dataset.value ?? i))), initial);
+    const confirm = card.querySelector('.hp-confirm');
+    const result = card.querySelector('.hp-result');
+    const saved = card.querySelector('.hp-saved');
+    const format = values => [values[0], values[1] ?? 0].map(n => String(n).padStart(2, '0')).join(':');
+    const updateButton = () => {confirm.disabled = !state.ready();};
+    const controls = wheels.map((wheel, col) => {
+      const options = optionGroups[col];
+      const count = options.length;
+      // Seven visual cycles provide neighbours on both sides of 00. Only the
+      // middle cycle retains option semantics; decorative copies are hidden to AT.
+      const fragment = document.createDocumentFragment();
+      const rows = [];
+      for (let cycle = 0; cycle < 7; cycle++) {
+        options.forEach(option => {
+          const row = cycle === 3 ? option : option.cloneNode(true);
+          if (cycle !== 3) {
+            row.removeAttribute('id'); row.removeAttribute('aria-selected');
+            row.setAttribute('role', 'presentation'); row.setAttribute('aria-hidden', 'true');
+          }
+          fragment.appendChild(row); rows.push(row);
+        });
+      }
+      wheel.replaceChildren(fragment);
+      wheel.dataset.loopReady = 'true';
+      let timer;
+      const rowHeight = () => options[0].getBoundingClientRect().height;
+      function paint() {
+        options.forEach((option, i) => option.setAttribute('aria-selected', String(i === state.index(col))));
+        wheel.setAttribute('aria-activedescendant', options[state.index(col)].id);
+        const visibleRow = Math.round(wheel.scrollTop / rowHeight());
+        rows.forEach((row, i) => row.dataset.active = String(i === visibleRow));
+      }
+      function move(n) {
+        clearTimeout(timer); state.move(col, n);
+        wheel.scrollTop = (3 * count + state.index(col)) * rowHeight();
+        paint();
+        state.settle(col); updateButton();
+      }
+      wheel.addEventListener('scroll', () => {
+        state.begin(col); updateButton();
+        let position = wheel.scrollTop / rowHeight();
+        if (position < count || position > 5 * count) {
+          position = recenterWheelPosition(position, count);
+          wheel.scrollTop = position * rowHeight();
+        }
+        state.move(col, position); paint();
+        clearTimeout(timer);
+        timer = setTimeout(() => move(Math.round(wheel.scrollTop / rowHeight())), 180);
+      }, {passive:true});
+      wheel.addEventListener('keydown', event => {
+        const draft = state.index(col);
+        const next = {ArrowUp:draft-1, ArrowDown:draft+1, Home:0, End:options.length-1,
+                      PageUp:draft-5, PageDown:draft+5}[event.key];
+        if (next !== undefined) {event.preventDefault(); move(next);}
+      });
+      rows.forEach((option, i) => option.addEventListener('click', () => {move(i); wheel.focus();}));
+      move(state.index(col));
+      if (typeof ResizeObserver !== 'undefined') {
+        let lastHeight = rowHeight();
+        new ResizeObserver(() => {
+          const height = rowHeight();
+          if (height !== lastHeight) {lastHeight = height; move(state.index(col));}
+        }).observe(options[0]);
+      }
+      return {restore: () => move(state.index(col))};
+    });
+    card.querySelector('.hp-cancel').addEventListener('click', () => {
+      state.cancel(); controls.forEach(control => control.restore());
+      result.textContent = '已取消本次修改，保留 ' + format(state.saved()) + '。';
+    });
+    confirm.addEventListener('click', () => {
+      if (!state.commit()) return;
+      saved.textContent = format(state.saved());
+      result.textContent = '已确认 ' + format(state.saved()) + '（仅当前页面演示）。';
+    });
+    updateButton();
+    card.querySelector('.hp-cancel').disabled = false;
+    result.textContent = '可滚动或使用方向键，各列停稳后确认。';
+  });
+})();
+
+document.querySelectorAll('[data-cc-demo]').forEach(root=>{
+  const one=(s)=>root.querySelector(s);
+  const status=one('[data-cc-status]');
+  const say=(value)=>{status.textContent=value;};
+  one('[data-cc-switch]').addEventListener('change',e=>say('通知：'+(e.target.checked?'开启':'关闭')));
+  one('[data-cc-check]').addEventListener('change',e=>say('已选：'+(e.target.checked?'是':'否')));
+  root.querySelectorAll('[data-cc-radio]').forEach(el=>el.addEventListener('change',()=>say('模式：'+el.value)));
+  root.querySelectorAll('[data-cc-segment]').forEach(el=>el.addEventListener('change',()=>say('视图：'+el.value)));
+  const range=one('[data-cc-range]'),rangeValue=one('[data-cc-range-value]');
+  range.addEventListener('input',()=>{rangeValue.textContent=range.value+'%';});
+  const step=one('[data-cc-step]'),down=one('[data-cc-down]'),up=one('[data-cc-up]');
+  const setStep=(n)=>{let v=Math.max(0,Math.min(5,n));step.textContent=String(v);down.disabled=v===0;up.disabled=v===5;};
+  down.addEventListener('click',()=>setStep(Number(step.textContent)-1));up.addEventListener('click',()=>setStep(Number(step.textContent)+1));setStep(2);
+  const search=one('[data-cc-search]'),clear=one('[data-cc-clear]'),searchResult=one('[data-cc-search-result]');
+  const updateSearch=()=>{let q=search.value.trim();searchResult.textContent=q ? (['日程','天气','提醒'].filter(x=>x.includes(q)).join('、')||'无匹配项目') : '输入关键词后筛选本地演示数据';clear.disabled=!search.value;};
+  search.addEventListener('input',updateSearch);clear.addEventListener('click',()=>{search.value='';updateSearch();search.focus();});updateSearch();
+  const required=one('[data-cc-required]'),error=one('[data-cc-error]');
+  one('[data-cc-validate]').addEventListener('click',()=>{let valid=!!required.value.trim();required.setAttribute('aria-invalid',String(!valid));error.textContent=valid?'✓ 已填写':'请输入名称后重试';say(valid?'输入已验证':'输入有误');if(!valid)required.focus();});
+  const load=one('[data-cc-load]'),loadResult=one('[data-cc-load-result]');let loading=false;
+  root.querySelectorAll('[data-cc-load-mode]').forEach(button=>button.addEventListener('click',()=>{if(loading)return;loading=true;load.disabled=true;loadResult.textContent='正在加载…';loadResult.classList.add('cc-skeleton');const mode=button.dataset.ccLoadMode;setTimeout(()=>{loadResult.classList.remove('cc-skeleton');loadResult.textContent=mode==='success'?'成功：3 条本地演示数据':mode==='empty'?'空：没有匹配记录':'失败：演示请求失败，可重试';load.disabled=false;loading=false;},250); }));
+  load.addEventListener('click',()=>{one('[data-cc-load-mode=success]').click();});
+  const confirm=one('[data-cc-confirm]'),menu=one('[data-cc-menu]'),sheet=one('[data-cc-sheet]');let opener=null,confirmed=0;
+  const open=(dialog,button)=>{opener=button;dialog.showModal();dialog.querySelector('button,[type=radio]')?.focus();};
+  const close=(dialog)=>{dialog.close();opener?.focus();opener=null;};
+  [confirm,menu,sheet].forEach(dialog=>{dialog.addEventListener('cancel',e=>{e.preventDefault();close(dialog);});dialog.addEventListener('close',()=>{opener?.focus();opener=null;});});
+  one('[data-cc-open-confirm]').addEventListener('click',e=>open(confirm,e.currentTarget));
+  one('[data-cc-confirm-cancel]').addEventListener('click',()=>close(confirm));
+  one('[data-cc-confirm-ok]').addEventListener('click',()=>{confirmed++;say('已执行危险操作 '+confirmed+' 次');close(confirm);});
+  one('[data-cc-open-menu]').addEventListener('click',e=>open(menu,e.currentTarget));
+  one('[data-cc-menu-cancel]').addEventListener('click',()=>close(menu));
+  menu.querySelectorAll('[data-cc-action]').forEach(b=>b.addEventListener('click',()=>{say('已选择：'+b.dataset.ccAction);close(menu);}));
+  let saved='上午';const chosen=one('[data-cc-chosen]');
+  one('[data-cc-open-sheet]').addEventListener('click',e=>{sheet.querySelectorAll('[data-cc-option]').forEach(r=>r.checked=r.value===saved);open(sheet,e.currentTarget);});
+  one('[data-cc-sheet-cancel]').addEventListener('click',()=>close(sheet));
+  one('[data-cc-sheet-ok]').addEventListener('click',()=>{saved=sheet.querySelector('[data-cc-option]:checked').value;chosen.textContent=saved;say('已保存时段：'+saved);close(sheet);});
+});
+</script></body>
+</html>

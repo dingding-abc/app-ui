@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+*.log
+.venv/
+.publish-tools/
+.DS_Store
+Thumbs.db
+.env
+.env.*
+!.env.example
+
+# Local history is not an active skill or a publication input.
+skill/archive/
+skill/scripts/old/
+contrast_patch.json
+
+# Keep the distributable linked by reuse.html.
+dist/*
+!dist/jp-min-ui-kit-5.1.zip
+!dist/jp-min-ui-kit-5.1.zip.sha256
