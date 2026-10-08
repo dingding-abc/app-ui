@@ -41,3 +41,7 @@
 `native/` 提供颜色适配器和一个 React Native 动作示例。SwiftUI 组件、WidgetKit 扩展、联网和持久化功能需要在自己的项目中实现。
 
 修改样式时，先读 [Skill](../skill/SKILL.md)，再修改相应生成器或主题配置。运行方法见 [Python 文件与版本](python-support.md)，截图更新方法见 [previews/README.md](previews/README.md)。
+
+## 弹层与表单
+
+日期／时间选择、滚动隔离、键盘避让和数字对齐见[交互说明](interaction-standard.md)与 `standards.html#picker-presentation`。时间示例仍为展开内容；完整模态和原生性能由接入项目验证。

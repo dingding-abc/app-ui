@@ -58,10 +58,10 @@ def variables(block):
 def validate(project,write=True):
     project=Path(project).resolve();sys.path.insert(0,str(project))
     from design_tokens import ratio
-    from hour_picker import CONTRACT, TIME_CONTRACT
+    from hour_picker import CONTRACT, TIME_CONTRACT, PRESENTATION_CONTRACT
     from shape_tokens import SHAPES, CONTRACT as BUTTON_CONTRACT
     from widget_spec import CONTRACT as WIDGET_CONTRACT
-    from component_catalog import CONTRACT as COMPONENT_CONTRACT
+    from component_catalog import CONTRACT as COMPONENT_CONTRACT, FORM_CONTRACT
     data=json.loads((project/'design-tokens.json').read_text(encoding='utf-8'))
     failures=[];checks=0;minimums={}
     def check(condition,reason):
@@ -81,6 +81,8 @@ def validate(project,write=True):
     check(data.get('components',{}).get('button_shape')==BUTTON_CONTRACT,'Button shape export differs from source contract')
     check(data.get('components',{}).get('widgetkit')==WIDGET_CONTRACT,'WidgetKit export differs from source contract')
     check(data.get('components',{}).get('html_demo')==COMPONENT_CONTRACT,'HTML demo catalog differs from source contract')
+    check(data.get('components',{}).get('picker_presentation')==PRESENTATION_CONTRACT,'Picker presentation export differs from source contract')
+    check(data.get('components',{}).get('form_interaction')==FORM_CONTRACT,'Form interaction export differs from source contract')
     for key,t in data['themes'].items():
         minimums[key]={}
         for mode in ('light','dark','light_hc','dark_hc'):

@@ -67,3 +67,7 @@ python skill/scripts/validate.py
 HTML 的 px 是样张逻辑尺寸，不是原生字号承诺。`--dt-scale` 是比例压力演示；原生使用系统 Text Style。iOS 最低支持版本须由具体 App 确认，玻璃材质在支持版本使用原生组件，旧系统采用实色回退。当前没有 SwiftUI 工程，JSON 导出不等于 SwiftUI 组件交付。
 
 2026-09-28 已在浏览器实际验证开关、表单错误与成功反馈、弹窗 Escape 后焦点恢复，以及自适应场景切换后草稿保留。折叠参数 280px 宽、左右安全区各 60px、折线 20px 时明确提示无法容纳；680px 宽、左安全区 120px、右安全区 0、折线 20px 时，按钮与文本框的实际矩形均未跨越中线。下载入口可取得 ZIP，摘要核对一致。上述是所列浏览器行为和布局场景的证据，不代表所有视口、四模式、大字号或触控均已验收。原生 iOS、真实 Duo 姿态、VoiceOver 与系统 Dynamic Type 尚未验证；历史截图位于 `skill/archive/`，不作本轮证据。
+
+## 2026-10-08 交互规范补充
+
+日期／时间独立弹层、手势隔离、停稳响应、单一表单键盘避让及单行数字居中纳入通用标准；入口为 `docs/interaction-standard.md`、`standards.html#picker-presentation`。导出新增 `components.picker_presentation` 和 `components.form_interaction`，分别由 `hour_picker.py`、`component_catalog.py` 维护，静态验收检查源与导出一致。现有分钟默认步进 1、主题和业务边界不变；展开内容演示不代表完整原生弹层。

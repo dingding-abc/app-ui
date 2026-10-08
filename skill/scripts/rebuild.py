@@ -18,10 +18,10 @@ def build(project):
     from build_ext import DARK
     from build_d import D
     from design_tokens import finish_palette
-    from hour_picker import CONTRACT, TIME_CONTRACT
+    from hour_picker import CONTRACT, TIME_CONTRACT, PRESENTATION_CONTRACT
     from shape_tokens import CONTRACT as BUTTON_CONTRACT
     from widget_spec import CONTRACT as WIDGET_CONTRACT
-    from component_catalog import CONTRACT as COMPONENT_CONTRACT
+    from component_catalog import CONTRACT as COMPONENT_CONTRACT, FORM_CONTRACT
     themes = {}
     for t in all_themes():
         light = derive(t['vars'], True)
@@ -30,7 +30,7 @@ def build(project):
             light=light, dark=dark, light_hc=finish_palette(light,True,True), dark_hc=finish_palette(dark,False,True))
     result = dict(version='5.1', native_contract_version=1, themes=themes,
         typography=dict(body=17,callout=16,subhead=15,footnote=13,caption=11),
-        spacing=[4,8,12,16,24,32], components=dict(hour_picker=CONTRACT,time_picker=TIME_CONTRACT,button_shape=BUTTON_CONTRACT,widgetkit=WIDGET_CONTRACT,html_demo=COMPONENT_CONTRACT), native_validation='pending',
+        spacing=[4,8,12,16,24,32], components=dict(hour_picker=CONTRACT,time_picker=TIME_CONTRACT,button_shape=BUTTON_CONTRACT,widgetkit=WIDGET_CONTRACT,html_demo=COMPONENT_CONTRACT,picker_presentation=PRESENTATION_CONTRACT,form_interaction=FORM_CONTRACT), native_validation='pending',
         source_fingerprints={p.name:hashlib.sha256(p.read_bytes()).hexdigest()
                              for p in sorted([*project.glob('*.py'),project/'themes.json'])})
     (project/'design-tokens.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

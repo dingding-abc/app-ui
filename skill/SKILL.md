@@ -83,3 +83,7 @@ python skill/scripts/test_system.py
 - `scripts/check_all.py`：在临时项目中检查全部有效 Python 文件；完整检查需要 Node.js，版本范围见 [Python 文件与版本](../docs/python-support.md)。
 
 原工作区的 `archive/v4/` 与 `scripts/old/` 仅为历史记录，不随 GitHub 仓库发布，也不是构建依赖。不要运行归档探针、把其截图当本轮证据，或重新引入其中已废弃的目录、数量、禁止规则。新增自动检查应验证可观察行为，不按CSS类数量制造“覆盖一致”的结论。
+
+## 日期／时间弹层与表单输入
+
+接入选择器或数字表单时读取[交互说明](../docs/interaction-standard.md)。规范源分别为 `hour_picker.py → PRESENTATION_CONTRACT`、`component_catalog.py → FORM_CONTRACT`，由构建导出；文字与布局要求在 `site_support.py → standards_page()`。同步示例说明、`ACCEPTANCE.md` 和验收报告。现有 HTML 滚轮为展开内容，不能据此声称完整模态、系统键盘或原生性能已实现。

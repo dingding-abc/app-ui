@@ -1,6 +1,13 @@
 """Shared local HTML component demonstrations, generated for every theme mode."""
 from html import escape
 
+FORM_CONTRACT = dict(
+    version=1, keyboard_avoidance='one_owner_per_form_viewport',
+    focus_visibility='whole_input_and_reachable_actions',
+    single_line_alignment='vertically_centered', multiline_alignment='top',
+    numeric_entry='editable_with_optional_stepper',
+    draft_validation='no_silent_stale_or_zero_submission', native_validation='required')
+
 CONTRACT = {
     'kind': 'browser-local-demonstration',
     'controls': ['switch', 'checkbox', 'radio', 'segmented', 'range', 'stepper', 'search', 'required-input', 'load-state', 'confirmation', 'menu', 'selection-sheet', 'progress', 'notification'],

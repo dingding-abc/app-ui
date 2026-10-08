@@ -21,3 +21,7 @@ node --test native/test-tokens.cjs
 ```
 
 接入后还需要在自己的工程中检查类型、系统字号、安全区、键盘和读屏操作。本仓库没有完整的 React Native App 工程。
+
+## 表单和日期／时间选择
+
+接入时同时读取[交互标准](interaction-standard.md)及导出的 `components.picker_presentation`、`components.form_interaction`。这两项描述验收行为，不是现成的原生控件；颜色适配器不自动实现弹层、手势或键盘避让。

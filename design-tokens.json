@@ -1530,6 +1530,35 @@
         "notification"
       ],
       "native_implementation": "pending"
+    },
+    "picker_presentation": {
+      "version": 1,
+      "applies_to": [
+        "date",
+        "time"
+      ],
+      "presentation": "independent_modal_sheet",
+      "background_interaction": "blocked",
+      "keyboard_on_open": "dismiss",
+      "actions": "fixed_inside_safe_area",
+      "date_body": "independently_scrollable",
+      "time_wheels": "no_same_axis_scrolling_ancestor",
+      "commit": "valid_draft_on_confirmation",
+      "dismiss": "discard_draft_and_restore_focus",
+      "settled_confirmation": "actual_aligned_stop_without_extra_delay",
+      "performance": "bounded_rendering_and_no_redundant_updates",
+      "sizing": "available_space_and_system_text_size",
+      "native_validation": "required"
+    },
+    "form_interaction": {
+      "version": 1,
+      "keyboard_avoidance": "one_owner_per_form_viewport",
+      "focus_visibility": "whole_input_and_reachable_actions",
+      "single_line_alignment": "vertically_centered",
+      "multiline_alignment": "top",
+      "numeric_entry": "editable_with_optional_stepper",
+      "draft_validation": "no_silent_stale_or_zero_submission",
+      "native_validation": "required"
     }
   },
   "native_validation": "pending",
@@ -1541,11 +1570,11 @@
     "build_devices.py": "1da494e874b8656be2c087fdcb7c94b5953dfc47f7c2e9940a5b6d35911e3bb8",
     "build_ext.py": "62ecbdd6d2ee117f20236aeb09af4c3745ba6aca5e7634cdc91d8bd95977f483",
     "catalog_pages.py": "57129868683e8d0a858b53c6c9ffaaaa352a002f9f908d4aa46d624ca7d097e7",
-    "component_catalog.py": "1269995c6d6777517e0d6e49fe747d9f2558a34413f2cf991f750f5f0405f229",
+    "component_catalog.py": "4cfeb0b8976d4ec8598b672d0d860eea488ae23b15203bb90c38b5b2d37f03ae",
     "design_tokens.py": "0c41e4442756ac5e0c32532d63ad619a9ff4a630d69604aa13ce114358000520",
-    "hour_picker.py": "1bceed3014bfc96c2f67e73b91c0655493254e13f3703cf4723ad0f83526a564",
+    "hour_picker.py": "51db6e4b066efa75d63c316d3ec4d824ccac6ca0e5131c12d8258c48fe0fb40f",
     "shape_tokens.py": "f2945333eb0c8340697a856e6631ea4c531d1e85b3914d9d3927b078bf9d5d84",
-    "site_support.py": "502b814d58ecef58322ed0b0788e1e62d4fa58e26fd1acb96ed3126def6cfc5b",
+    "site_support.py": "e51a1f970287c4eda338c6639be0487cec82316401d2a8cca5560676af267d98",
     "theme_registry.py": "70e343c0b53099f7405d5c354c9af967543a81abe0b7f29ad17800d04dfe1a5a",
     "themes.json": "7d4ce136387dbc66261e377f2fb0e16fb63fbbb946b8c27e4fa0e34419d2da13",
     "widget_spec.py": "3d3ba0a88743719dca2fa8bdfbcee960782ad8b77f1c5f1784e4349ff2fd5a99"

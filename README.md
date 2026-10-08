@@ -56,6 +56,10 @@ python skill/scripts/validate.py
 
 请保留整个仓库；只复制 `skill/` 会缺少生成页面所需的模板。
 
+## 交互规范
+
+日期／时间弹层、滚动隔离、键盘避让和数字输入对齐见[交互说明](docs/interaction-standard.md)及[在线规范](https://dingding-abc.github.io/app-ui/standards.html#picker-presentation)。HTML 滚轮演示展示展开内容，接入 App 后仍须验证系统键盘、真实手势和焦点恢复。
+
 ## 检查
 
 ```sh

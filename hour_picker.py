@@ -1,6 +1,17 @@
 """Hour-only and hour/minute wheel contracts shared by every theme."""
 from html import escape
 
+# Presentation requirements are independent of a platform's wheel implementation.
+PRESENTATION_CONTRACT = dict(
+    version=1, applies_to=['date', 'time'], presentation='independent_modal_sheet',
+    background_interaction='blocked', keyboard_on_open='dismiss',
+    actions='fixed_inside_safe_area', date_body='independently_scrollable',
+    time_wheels='no_same_axis_scrolling_ancestor',
+    commit='valid_draft_on_confirmation', dismiss='discard_draft_and_restore_focus',
+    settled_confirmation='actual_aligned_stop_without_extra_delay',
+    performance='bounded_rendering_and_no_redundant_updates',
+    sizing='available_space_and_system_text_size', native_validation='required')
+
 CONTRACT = dict(version=2, meaning='hour_of_day', minimum=0, maximum=23, step=1,
                 sample_hour=9, wraps=True, commit='explicit_confirmation',
                 row_min_pt=44, visible_rows=5, number_size_pt=22,
@@ -187,7 +198,7 @@ def card(prefix, mode, hour=9):
 
 def samples(dark=False):
     modes = ('dark','dark_hc') if dark else ('light','light_hc')
-    return '<section class="hp-section" id="hour-picker"><h2>小时滚动选择</h2><p>居中一行表示当前草稿，确认后才更新已确认值。下方为展开的 Sheet 内容样张；不连接业务服务，刷新恢复 09:00。</p><div class="hp-grid">' + ''.join(card('hp-'+mode,mode) for mode in modes) + '</div><p><a href="standards.html#hour-picker">查看尺寸、状态、12 小时制与原生验收标准 →</a></p></section>' + '<section class="hp-section" id="time-picker"><h2>小时＋分钟 · 双列滚轮</h2><p>小时 00–23，分钟 00–59，每次 1 分钟；两列分别滚动，共同确认。小时23↔00、分钟59↔00首尾循环；分钟循环不自动改变小时。刷新恢复 09:30。</p><div class="hp-grid">' + ''.join(time_card('tp-'+mode,mode) for mode in modes) + '</div><p><a href="standards.html#time-picker">查看分钟步进、双列提交与验收规则 →</a></p></section>'
+    return '<section class="hp-section" id="hour-picker"><h2>小时滚动选择</h2><p>居中一行表示当前草稿，确认后才更新已确认值。下方为展开的 Sheet 内容样张，不是完整弹层或性能验收；实际接入须遵守独立容器、手势隔离与固定操作区要求。不连接业务服务，刷新恢复 09:00。</p><div class="hp-grid">' + ''.join(card('hp-'+mode,mode) for mode in modes) + '</div><p><a href="standards.html#hour-picker">查看尺寸、状态、12 小时制与原生验收标准 →</a></p></section>' + '<section class="hp-section" id="time-picker"><h2>小时＋分钟 · 双列滚轮</h2><p>小时 00–23，分钟 00–59，每次 1 分钟；两列分别滚动，共同确认。小时23↔00、分钟59↔00首尾循环；分钟循环不自动改变小时。刷新恢复 09:30。此处仅演示展开内容；<a href="standards.html#picker-presentation">弹层、键盘与响应规范</a>须在实际 App 接入。</p><div class="hp-grid">' + ''.join(time_card('tp-'+mode,mode) for mode in modes) + '</div><p><a href="standards.html#time-picker">查看分钟步进、双列提交与验收规则 →</a></p></section>'
 
 
 def time_card(prefix, mode, hour=9, minute=30, minute_step=1):

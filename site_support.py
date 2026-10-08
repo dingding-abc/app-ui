@@ -143,9 +143,23 @@ def standards_page():
 <tr><td>浅色／深色／增强对比度</td><td>四种组合独立生成。增强对比度下文字目标 7:1，不能回退到另一模式的颜色。</td></tr></table></div>
 <h2>文字与间距</h2><p>正文 17、操作说明 16、次标题 15、辅助说明 13、短标签 11；标题按用途使用 20 / 22 / 28 / 34。iOS 使用系统 Text Style，不将 HTML 比例等同于系统字号档位。可保留展示性书法或罗马字标识，功能文字随语言调整字体、字距与行高。</p><p>间距使用 4 / 8 / 12 / 16 / 24 / 32，页面边距默认 16。数字是起点，不强迫不同业务拥有相同布局。大字号时按钮、表单和卡片允许撑高，必要时由横向改纵向。</p>
 <h2>组件与交互</h2><ul><li>每屏主要操作明确；按钮区分默认、按下、禁用与提交中。提交中防止重复提交，失败保留输入并提供重试。</li><li>常用操作命中区域至少 44×44pt。22pt 图形保留在足够大的点击区域内；不可用扩大区域造成相邻操作重叠。</li><li>输入框明确标签、必填、错误原因和恢复方式；弹出键盘后仍能看到当前输入与主要操作。</li><li>Sheet 区分取消与保存；有未保存内容时关闭需处理丢失风险；滚动到末尾的内容和操作不能被悬浮栏遮挡。</li><li>列表提供加载、空、失败、无权限与正常状态。HTML 样张不代表联网业务已经实现。</li></ul>
+<section id="picker-presentation"><h2>日期／时间弹层与表单避让</h2>
+<p>字段位于页面底部、弹窗内或大字号布局时，日期和时间选择使用独立模态容器。打开收起键盘，背景不能接收触控和滚动；不得依赖用户先把页面滚到某处才能完整操作。遵循系统弹层与安全区，同一模态层只有一个当前活动的选择器。</p>
+<div class="kit-table-wrap"><table><tr><th>区域／状态</th><th>要求</th></tr>
+<tr><td>标题与当前草稿</td><td>长文案允许换行；必要时标题区独立滚动，不能挤掉选中值和操作区。</td></tr>
+<tr><td>日期主体</td><td>日历主体可独立滚动，保留月份切换、快速年月定位及有效范围；切月不自动提交日期。</td></tr>
+<tr><td>时间主体</td><td>小时、分钟列只处理自身滑动；不嵌套到同方向滚动的页面中。可按剩余高度减少邻行；行高随字号增长，选中行与两列值必须保持可见。</td></tr>
+<tr><td>底部操作</td><td>取消／确认固定在实际安全区内，不能被键盘、系统栏或主体滚动遮挡。确认有效草稿才回填，取消、遮罩、返回和关闭保留原值并恢复入口焦点；最终业务保存仍由外层表单负责。</td></tr>
+<tr><td>停稳与响应</td><td>实际停止且对齐后及时允许确认，不额外等待固定延迟；手指仍按住、惯性中、吸附或定位未完成时保持禁用。优先使用平台停止事件，缺少事件才用可取消的静默兜底；不得提前解锁。</td></tr>
+<tr><td>循环与性能</td><td>避免一次挂载大量不可见候选和同值重复刷新。仅接近循环物理边缘时平移到等值位置；普通停稳不强制额外回中。渲染数量与兜底时长按平台实测，不统一硬编码。</td></tr>
+</table></div>
+<h3>布局示意</h3><p>日期：标题／草稿 → 可滚动日历 → 固定取消／确认。时间：标题／草稿 → 独立双列滚轮 → 固定取消／确认。箭头表示区域顺序，不代表整个弹层可以统一纵向滚动。</p>
+<h3>键盘与数字输入</h3><p>每个表单视口由一个容器负责滚动和键盘避让；嵌入 Sheet 的表单复用外层容器，避免嵌套页面再滚动或重复计算键盘边距。键盘打开、切换输入框和高度变化时，当前输入框整体可见，主要操作可到达；由实际键盘和安全区计算可用空间，不写死机型高度。</p>
+<p>单行数字在输入框内纵向居中，保留数字键盘和可选加减按钮；多行备注顶部对齐。字号放大时允许控件增高，不用缩字掩盖裁切，也不将文字行高直接套在原生单行输入上。清空和非法草稿不静默提交旧值或零值。</p>
+<p>验收覆盖底部入口、页面滑动后立即拨轮、两列同时操作、键盘已打开时切换字段、弹窗内表单、小屏、大字体、明暗与读屏。记录版本、设备、场景和观察结果。各主题现有滚轮是展开内容的 HTML 演示；本节是接入要求，未交付完整原生日期／时间弹层。见 <a href="docs/interaction-standard.md">接入与验收说明</a>。</p></section>
 <h2>图标与材质</h2><p>通用自绘图标采用 24pt 网格、约 20pt 核心绘制区、1.6pt 圆头线条；箭头与勾号可按既有例外加粗。原生 Tab 优先采用系统组件与匹配的 SF Symbols 变体，允许填充图标。普通线性图标和原生 Tab 的例外需明确区分。</p><p>主题色与材质是两个维度。玻璃只用于导航与控件，不铺满内容卡片。HTML 毛玻璃仅为视觉示意；iOS 使用系统材质并响应降低透明度、减少动态效果。老系统回退到实色，不改变操作含义。</p>
 <h2>验收顺序</h2><ol><li>P0：四种颜色组合、标签文字、按钮字色和功能图标对比度。</li><li>P1：主题覆盖、页面导航、图标规则、长文案及字号放大、命中区和文档一致性。</li><li>P2：新主题生成、重复构建稳定、配置校验、资源与导出数据可追溯。</li><li>iOS 工程：最小与最大支持设备、系统大字号、VoiceOver、键盘、深浅模式及减少动态效果。通过记录必须含版本、场景和实际结果。</li></ol><p>设备页面是预设尺寸下的 HTML 样张，不是模拟器或真机检测报告。安全区由系统读取，不把样张中的 62 / 34 常量写入产品。</p>
 <h2>依据</h2><p><a href="https://developer.apple.com/design/human-interface-guidelines/typography">Apple 字体</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Apple 按钮</a> · <a href="https://developer.apple.com/documentation/technologyoverviews/adopting-liquid-glass">Liquid Glass</a> · <a href="https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html">WCAG 文字对比度</a></p>'''
     content = content.replace('<h2>图标与材质</h2>', widget_standard() + hour_standard() + '<h2>图标与材质</h2>')
-    page = '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>设计与验收规范 v5</title><style>body{margin:0;background:#F1EEE8;color:#2A2723;font-family:system-ui,sans-serif}a{color:#654631}</style></head><body><div class="board"><main class="kit-doc">' + content + '</main></div></body></html>'
+    page = '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>设计与验收规范 v5</title><style>*{box-sizing:border-box}body{margin:0;background:#F1EEE8;color:#2A2723;font-family:system-ui,sans-serif}a{color:#654631}</style></head><body><div class="board"><main class="kit-doc">' + content + '</main></div></body></html>'
     return prepare_page(page, 'standards.html')
