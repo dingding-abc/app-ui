@@ -3,6 +3,7 @@ __pycache__/
 *.log
 .venv/
 .publish-tools/
+.tmp/
 .DS_Store
 Thumbs.db
 .env

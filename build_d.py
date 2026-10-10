@@ -171,32 +171,32 @@ GLASS_CSS = r"""
   box-shadow:inset 0 1px 0 rgba(255,255,255,.5),0 2px 10px rgba(0,0,0,.16)}
 
 /* 玻璃导航栏：紧贴状态栏（.statusbar 实际高 46px）下方 */
-.gnav{position:absolute;top:46px;left:0;right:0;z-index:30;padding:8px 18px 12px;
+.gnav{position:relative;z-index:30;padding:8px 16px 12px;
   border-bottom:1px solid color-mix(in srgb,var(--ink) 9%,transparent)}
 .gnav .gt{font-size:calc(27px * var(--dt-scale,1));font-weight:700;letter-spacing:.05em;line-height:1.15;color:var(--ink)}
 .gnav .gs{font-size:calc(11px * var(--dt-scale,1));letter-spacing:.16em;color:var(--sub);margin-top:2px}
-.gnav .gact{position:absolute;right:16px;top:14px;width:34px;height:34px;border-radius:17px;
+.gnav .gact{position:absolute;right:16px;top:8px;width:44px;height:44px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;color:var(--sub);
   background:color-mix(in srgb,var(--ink) 7%,transparent)}
 .gnav .gact svg{width:17px;height:17px}          /* ← v1 缺失导致巨大加号 */
 
 /* 浮起胶囊 Tab 栏（真机安全区与 home indicator 的核算见 devices.html） */
-.gtab{position:absolute;left:14px;right:14px;bottom:24px;z-index:30;height:54px;
-  border-radius:27px;display:flex;align-items:center;padding:0 6px;
+.gtab{position:relative;margin:8px 16px 24px;z-index:30;min-height:54px;height:auto;flex:none;
+  border-radius:var(--r-btn);display:flex;align-items:stretch;padding:4px;
   background:color-mix(in srgb,var(--bg) 70%,transparent);
   backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%);
   box-shadow:0 10px 28px rgba(30,24,14,.17),inset 0 1px 0 rgba(255,255,255,.55)}
 .gtab .ti{flex:1;min-height:44px;display:flex;flex-direction:column;align-items:center;
-  gap:3px;justify-content:center;font-size:calc(10px * var(--dt-scale,1));letter-spacing:.04em;color:var(--faint)}
+  gap:4px;justify-content:center;font-size:calc(var(--type-caption) * var(--dt-scale,1));letter-spacing:.04em;color:var(--faint);min-width:0;overflow-wrap:anywhere}
 .gtab .ti svg{width:22px;height:22px}
 .gtab .ti.on{color:var(--accent-text)}
 .gtab .ti .dot{width:4px;height:4px;border-radius:2px}
 .gtab .ti.on .dot{background:var(--accent)}
 
 /* 内容层（和纸卡，HIG 允许内容层用实色） */
-.gscroll{position:absolute;inset:0;padding:46px 0 0;overflow:hidden}
+.gscroll{position:relative;flex:1;min-height:0;overflow-y:auto;padding-bottom:16px}
 .gcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card)}
-.ghero{margin:66px 16px 12px;height:120px;border-radius:var(--r-card);position:relative;
+.ghero{margin:16px 16px 12px;min-height:120px;height:auto;border-radius:var(--r-card);position:relative;
   overflow:hidden;background:linear-gradient(135deg,#E4B37C 0%,#D08C68 36%,#8B6E96 72%,#5A6DA4 100%)}
 .ghero .sun{position:absolute;right:26px;top:22px;width:42px;height:42px;border-radius:50%;
   background:rgba(255,244,220,.92);box-shadow:0 0 26px rgba(255,238,200,.7)}

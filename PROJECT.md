@@ -16,6 +16,7 @@
 | 共用组件 | `build.py`、`build_ext.py` | 基础与扩展组件 |
 | 小时/分钟滚轮契约、外观与演示交互 | `hour_picker.py` | 各主题 `#hour-picker` / `#time-picker`，导出 `components.hour_picker` / `components.time_picker` |
 | 按钮形状 / WidgetKit标准与样张 | `shape_tokens.py` / `widget_spec.py` | 各主题 `#widgetkit`、规范页、导出 `components.button_shape` / `components.widgetkit` |
+| 排版、间距与顶部提示契约 | `ui_contract.py` | 共用 CSS、规范/文档生成区块、`typography_roles` / `layout` / `components.transient_feedback` |
 | 全局导航、规范与页面壳 | `site_support.py` | 总览、规范及共用 CSS |
 | 图标 | `build.py` / `build_ext.py`，分类目录 `CATS` | `icons.html` |
 | 可操作 HTML 演示 | `component_catalog.py` | 主题基础、扩展页及 `components.html` |
@@ -77,8 +78,34 @@ HTML 的 px 是样张逻辑尺寸，不是原生字号承诺。`--dt-scale` 是�
 
 底部当前导航项新增主题浅底与统一 12pt 圆角；语义使用 accent_soft / accent_deep，四模式沿用现有颜色求解，原种子不变。shape_tokens.py 提供 NAVIGATION_CONTRACT，rebuild.py 导出 components.navigation_selection；site_support.py 更新所有主题样张及规范页。真实原生导航仍由消费 App 验收。
 
-## 2026-10-10 顶部轻提示
+## 2026-10-10 顶部轻提示（历史记录，旧3秒与靠右规则已失效）
+
+本节记录先前迭代，不是当前接入规则。当前以 `ui_contract.py` 及文末一致性修订为准。
 
 根据“齿间时光”补充需求，将“顶部信息，约 3 秒自动消失，无需点击确认”纳入简短非阻断反馈规则。权威来源为 `docs/interaction-standard.md` 的“顶部轻提示”，同步 `site_support.py → standards_page()`、`standards.html#transient-feedback`、skill 和 F01–F03 验收。仅追加规范文字，无新增计时器实现或 JSON 契约；保留原有错误恢复、风险操作及选择器确认。当前仓库无“齿间时光”App 源码，其实际行为待在消费工程验证。
 
 后续按用户要求新增静态显示效果：`site_support.py → feedback_samples()` 与共用样式生成各主题 `#top-feedback`，基础页为浅色／浅色 HC，扩展页为深色／深色 HC。以“齿间时光”的演示记录作为背景，顶部“记录已保存”持续显示，无确认按钮、计时器或消失动画。截图位于 `docs/previews/`，规范页及各主题顶部提供入口。
+
+顶部提示胶囊进一步统一为主题色：`accent_soft` 背景搭配 `accent_deep` 文字／图标，四模式复用既有颜色求解。验收追加 F04，静态显示方式不变。
+
+淡出行为纳入规范与 F05：完整停留约 3 秒后以约 200ms 透明度缓出，减少动态效果时直接隐藏，新提示取消旧淡出。这里只交付规则，静态样张不播放消失动画。
+
+悬浮行为纳入规范与 F06：胶囊脱离普通布局，不占位、不挤压或推移底层内容，不额外预留空白。`site_support.py` 的静态样张采用相对容器＋绝对定位浮层，顶部靠右避开示例标题，非交互层穿透触控；原生仍按实际安全区定位。
+
+## 2026-10-10 全主题截图同步
+
+更新全部 7 主题的组件与导航预览，新增 14 张基础／扩展完整截图和导航浅深对照图，入口为 `docs/previews/README.md`。README／总览原有精选图路径保留，但截图范围扩展至整屏导航。完整截图来自当前生成页，浏览器默认 1280×720 视口；离线包同步包含全部图片。
+
+## 2026-10-10 顶部轻提示位置与时长修订
+
+当前规则以此修订及 `docs/interaction-standard.md` 为准：提示水平居中，位于实际系统顶部安全区下沿再向下 8pt，避开摄像头／刘海／灵动岛，已排除安全区的容器不得重复叠加。完整停留 1.5 秒后约 200ms 淡出，替代此前 3 秒。静态样张加入摄像头与 59px 安全区示意，保留独立浮层；品牌导航行固定 44px，与提示显示无关。7 主题基础与扩展完整图、浅深顶部提示截图均已同步；HTML 继续常显，不实现计时器。
+
+## 2026-10-10 UI 一致性修订
+
+`ui_contract.py` 集中主要组件字号、字重、行高、系统Text Style、间距与顶部提示；5.1原数字typography字段及native契约1保持兼容，丰富角色为新增字段。独立按钮胶囊、图标按钮圆形与导航r_segment不随主题变化；卡片r_card与输入r_in保留主题风格。装饰、图表标注及设备示意几何是明确例外。
+
+危险填充danger/on_danger与文字danger_text分离，文字同时求解bg/surface/fill/danger_soft；成功文字亦覆盖页面/卡片与success_soft。旧Toast与顶部提示统一accent_soft/accent_deep。玻璃导航改为可撑高布局，状态栏只占位一次，内容单独滚动；搜索、列表与Tab随大字增高。可操作表单区分默认、按下、禁用、提交中、成功与失败，编辑清除旧验证结果，加载期间禁用全部触发项。
+
+生成顶部规则的权威来源是ui_contract.py，JSON、规范页及docs/interaction-standard.md标记区块由重建器同步；skill仅引用有效规则。水平居中，实际顶部安全区下沿8pt，完整停留1.5秒再200ms opacity缓出；静态样张持续可见。
+
+新增 `python skill/scripts/preview_stress.py` 生成工作区临时HTML，包含116个320px场景（7主题四模式×4个比例及4个玻璃场景），供浏览器核验真实组件；不属于21页正式交付或原生验证。`validate.py`增加实际CSS颜色绑定、组件间距引用及几何约束，`test_system.py`证明破坏危险文字绑定会失败，`test_browser_scripts.py`验证错误/成功/编辑重置和重复加载保护。

@@ -56,6 +56,16 @@ class ColorBehavior(unittest.TestCase):
     def test_reference_contrast(self):
         self.assertAlmostEqual(ratio('#000000','#FFFFFF'),21)
         self.assertAlmostEqual(ratio('#123456','#123456'),1)
+
+    def test_danger_text_on_actual_component_backgrounds(self):
+        from site_support import all_themes
+        from build_d import D
+        for theme in all_themes():
+            for light, base in ((True,theme['vars']),(False,D if theme['letter']=='D' else DARK[theme['letter']])):
+                for hc in (False,True):
+                    p=finish_palette(base,light,hc)
+                    for bg in ('bg','surface','fill','danger_soft'):
+                        self.assertGreaterEqual(ratio(p['danger_text'],p[bg]),7 if hc else 4.5,(theme['letter'],light,hc,bg))
     def test_dark_hc_regression(self):
         for key in ('E','F'):
             p=finish_palette(DARK[key],False,True)
@@ -140,6 +150,17 @@ class BuildBehavior(unittest.TestCase):
             failed=run('validate.py',success=False)
             self.assertIn('minute range/order incorrect',failed.stdout)
             hour_output.write_text(valid_hour_page,encoding='utf-8')
+            hour_output.write_text(valid_hour_page.replace('.btn-danger{background:var(--danger-soft);color:var(--danger-text)}','.btn-danger{background:var(--danger-soft);color:var(--danger)}',1),encoding='utf-8')
+            failed=run('validate.py',success=False)
+            self.assertIn('actual component color binding .btn-danger',failed.stdout)
+            hour_output.write_text(valid_hour_page,encoding='utf-8')
+            run('validate.py')
+            glass_output=project/'d-murasaki-ext.html'
+            valid_glass_page=glass_output.read_text(encoding='utf-8')
+            glass_output.write_text(valid_glass_page.replace('screen dev gspec dark','screen dev gspec',1),encoding='utf-8')
+            failed=run('validate.py',success=False)
+            self.assertIn('glass sample mode coverage',failed.stdout)
+            glass_output.write_text(valid_glass_page,encoding='utf-8')
             run('validate.py')
             result=json.loads((project/'acceptance-results.json').read_text(encoding='utf-8'))
             self.assertEqual(result['status'],'PASS')

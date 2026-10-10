@@ -16,7 +16,7 @@ python skill/scripts/check_all.py
 
 ## 文件清单
 
-当前维护 24 个 Python 文件。辅助模块不提供独立命令，直接执行时只加载定义；它们的实际功能由生成器和回归测试调用。
+当前维护 26 个 Python 文件。辅助模块不提供独立命令，直接执行时只加载定义；它们的实际功能由生成器和回归测试调用。
 
 | 文件 | 用途 |
 | --- | --- |
@@ -31,6 +31,7 @@ python skill/scripts/check_all.py
 | `design_tokens.py` | 语义颜色和对比度计算模块 |
 | `hour_picker.py` | 时间滚轮模块 |
 | `shape_tokens.py` | 控件形状配置 |
+| `ui_contract.py` | 主要组件排版、间距与顶部提示权威契约 |
 | `site_support.py` | 导航、总览及规范页面模块 |
 | `theme_registry.py` | 主题配置读取与校验模块 |
 | `widget_spec.py` | Widget 外观与说明模块 |
@@ -43,6 +44,7 @@ python skill/scripts/check_all.py
 | `skill/scripts/test_browser_scripts.py` | 页面内 JavaScript 语法检查，需要 Node.js |
 | `skill/scripts/test_picker_state.py` | 时间滚轮状态检查，需要 Node.js |
 | `skill/scripts/test_adaptive_layout.py` | 自适应布局状态检查，需要 Node.js |
+| `skill/scripts/preview_stress.py` | 从真实组件源生成116个窄屏/四模式/大字压力场景 |
 | `skill/scripts/check_all.py` | 上述文件的统一检查入口 |
 
 `skill/archive/`、`skill/scripts/old/` 是原工作区中的历史备份，不属于当前源码，不上传、不打包，也不在此清单中。
@@ -62,3 +64,5 @@ python skill/scripts/check_all.py
 表中的补丁号用于记录实测环境，不是安装要求。此前 `build_ext.py` 中两处字符串写法依赖 Python 3.12 语法，已改成较早版本也能执行的写法。
 
 详细结果见 [验收记录](../ACCEPTANCE_REPORT.md)。本次没有测试 Linux/macOS；版本检查不代替浏览器或原生 iOS 验证。
+
+2026-10-10 UI一致性修订增加两份Python源；本轮实测Python3.12.14，历史五版本24文件记录仅对应当时版本，不能作为新增文件已跨版本测试的证据。

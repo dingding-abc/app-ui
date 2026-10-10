@@ -364,7 +364,7 @@ EXT_CSS = """
 .nav-row a.cur{color:var(--on-accent);background:var(--accent);border-color:var(--accent-text)}
 
 /* ===== dark mode additions ===== */
-.toast{background:var(--toast-bg);color:var(--toast-fg)}
+.toast{background:var(--accent-soft);color:var(--accent-deep)}
 .dark .seg .on{background:var(--elev);box-shadow:0 1px 4px rgba(0,0,0,.5)}
 .dark .stage{background:rgba(8,7,5,.6)}
 .dark .alert{box-shadow:0 18px 44px rgba(0,0,0,.55)}

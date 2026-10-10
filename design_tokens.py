@@ -53,7 +53,9 @@ def finish_palette(base, light, high_contrast=False):
         if high_contrast and ratio(p['on_' + key], p[key]) < TEXT_HC:
             p[key] = readable(p[key], [p['on_' + key]], TEXT_HC, p['on_' + key] == '#FFFFFF')
     for key in ('accent', 'danger'):
-        p[key + '_text'] = readable(p[key], backgrounds, target, light)
+        # Text-only destructive actions are also rendered on danger_soft.
+        text_backgrounds = backgrounds + ([p['danger_soft']] if key == 'danger' else [])
+        p[key + '_text'] = readable(p[key], text_backgrounds, target, light)
     p['accent_ui'] = readable(p['accent'], backgrounds, 4.5 if high_contrast else UI_MIN, light)
     p['accent_deep'] = readable(p['accent_deep'], [p['accent_soft']], target, light)
     p['control_border'] = readable(p['line_strong'], backgrounds, 4.5 if high_contrast else UI_MIN, light)
@@ -65,7 +67,7 @@ def finish_palette(base, light, high_contrast=False):
         p[key] = readable(p[key], backgrounds, target, light)
     for key, seed in [('success', '#417358'), ('warning', '#8C641C'), ('info', '#386C96')]:
         p[key + '_soft'] = hsl_color(colorsys.rgb_to_hls(*[int(seed[i:i+2], 16)/255 for i in (1,3,5)])[0], .2, .95 if light else .18)
-        p[key + '_text'] = readable(seed, [p[key + '_soft']], target, light)
+        p[key + '_text'] = readable(seed, [p[key + '_soft'], *backgrounds], target, light)
     if high_contrast:
         p['line'] = p['line_strong']
         p['line_strong'] = p['control_border']

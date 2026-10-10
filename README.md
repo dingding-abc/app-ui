@@ -24,6 +24,8 @@
 
 [浅色](https://dingding-abc.github.io/app-ui/theme-sunny-day.html) / [深色及扩展组件](https://dingding-abc.github.io/app-ui/theme-sunny-day-ext.html)
 
+全部 7 套主题的图片已更新，含基础与深色扩展完整页：[查看图片目录](docs/previews/README.md)。
+
 ## 本地使用
 
 下载后打开 `index.html` 就能浏览，不需要安装依赖。修改样式或新增配色时，使用 **Python 3.10–3.14**，无需固定到 3.12.14。`.python-version` 中的 3.12 只是默认开发版本。

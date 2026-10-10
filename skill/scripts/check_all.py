@@ -14,9 +14,9 @@ from package_release import release_files
 ROOT = Path(__file__).resolve().parents[2]
 GENERATORS = ('build.py', 'build_d.py', 'build_d_ext.py', 'build_devices.py', 'build_ext.py')
 MODULES = ('adaptive_demo.py', 'catalog_pages.py', 'component_catalog.py', 'design_tokens.py',
-           'hour_picker.py', 'shape_tokens.py', 'site_support.py', 'theme_registry.py', 'widget_spec.py')
+           'hour_picker.py', 'shape_tokens.py', 'site_support.py', 'theme_registry.py', 'widget_spec.py', 'ui_contract.py')
 SCRIPTS = ('create_theme.py', 'rebuild.py', 'package_release.py', 'validate.py', 'test_system.py',
-           'test_release.py', 'test_browser_scripts.py', 'test_picker_state.py', 'test_adaptive_layout.py')
+           'test_release.py', 'test_browser_scripts.py', 'test_picker_state.py', 'test_adaptive_layout.py', 'preview_stress.py')
 JS_SCRIPTS = ('test_browser_scripts.py', 'test_picker_state.py', 'test_adaptive_layout.py')
 
 

@@ -22,6 +22,7 @@ def build(project):
     from shape_tokens import CONTRACT as BUTTON_CONTRACT, NAVIGATION_CONTRACT
     from widget_spec import CONTRACT as WIDGET_CONTRACT
     from component_catalog import CONTRACT as COMPONENT_CONTRACT, FORM_CONTRACT
+    from ui_contract import TYPE_SIZES, TYPE_ROLES, SPACING, LAYOUT, FEEDBACK, feedback_markdown
     themes = {}
     for t in all_themes():
         light = derive(t['vars'], True)
@@ -29,11 +30,18 @@ def build(project):
         themes[t['letter']] = dict(name=t['jp'], file=t['file'], material=t.get('material','paper'),
             light=light, dark=dark, light_hc=finish_palette(light,True,True), dark_hc=finish_palette(dark,False,True))
     result = dict(version='5.1', native_contract_version=1, themes=themes,
-        typography=dict(body=17,callout=16,subhead=15,footnote=13,caption=11),
-        spacing=[4,8,12,16,24,32], components=dict(hour_picker=CONTRACT,time_picker=TIME_CONTRACT,button_shape=BUTTON_CONTRACT,navigation_selection=NAVIGATION_CONTRACT,widgetkit=WIDGET_CONTRACT,html_demo=COMPONENT_CONTRACT,picker_presentation=PRESENTATION_CONTRACT,form_interaction=FORM_CONTRACT), native_validation='pending',
+        typography=TYPE_SIZES, typography_roles=TYPE_ROLES, layout=LAYOUT,
+        spacing=SPACING, components=dict(hour_picker=CONTRACT,time_picker=TIME_CONTRACT,button_shape=BUTTON_CONTRACT,navigation_selection=NAVIGATION_CONTRACT,widgetkit=WIDGET_CONTRACT,html_demo=COMPONENT_CONTRACT,picker_presentation=PRESENTATION_CONTRACT,form_interaction=FORM_CONTRACT,transient_feedback=FEEDBACK), native_validation='pending',
         source_fingerprints={p.name:hashlib.sha256(p.read_bytes()).hexdigest()
                              for p in sorted([*project.glob('*.py'),project/'themes.json'])})
     (project/'design-tokens.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    guidance = project/'docs/interaction-standard.md'
+    text = guidance.read_text(encoding='utf-8')
+    start, end = '<!-- feedback-contract:start -->', '<!-- feedback-contract:end -->'
+    if start in text and end in text:
+        before, rest = text.split(start, 1)
+        _, after = rest.split(end, 1)
+        guidance.write_text(before + start + '\n' + feedback_markdown() + '\n' + end + after, encoding='utf-8')
     return result
 
 

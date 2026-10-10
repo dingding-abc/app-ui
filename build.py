@@ -317,7 +317,7 @@ button{font-family:inherit}
 .btn-soft{background:var(--accent-soft);color:var(--accent-deep)}
 .btn-ghost{background:transparent;color:var(--accent-text)}
 .btn-ghost:hover{background:var(--accent-soft)}
-.btn-danger{background:var(--danger-soft);color:var(--danger)}
+.btn-danger{background:var(--danger-soft);color:var(--danger-text)}
 .btn-disabled{background:var(--fill);color:var(--faint);cursor:default}
 .btn-disabled:hover{filter:none}
 .btn-loading{background:var(--accent);color:var(--on-accent);opacity:.72}
@@ -382,9 +382,9 @@ button{font-family:inherit}
 .input.error{border-color:var(--danger);box-shadow:0 0 0 3px var(--danger-soft)}
 .field-msg{font-size:calc(12px * var(--dt-scale,1));margin-top:7px;color:var(--danger);letter-spacing:.02em}
 .field-msg.ok{color:var(--tone2-text)}
-.search{height:42px;background:var(--fill);border-radius:21px;display:flex;align-items:center;
-  gap:9px;padding:0 15px;font-size:calc(14px * var(--dt-scale,1));color:var(--faint)}
-.search svg{width:16px;height:16px;color:var(--sub)}
+.search{height:auto;min-height:44px;background:var(--fill);border-radius:var(--r-btn);display:flex;align-items:center;
+  gap:8px;padding:8px 16px;font-size:calc(16px * var(--dt-scale,1));color:var(--faint);overflow-wrap:anywhere}
+.search svg{width:16px;height:16px;flex:none;color:var(--sub)}
 .textarea{min-height:86px;border:1px solid var(--line-strong);border-radius:var(--r-in);
   background:var(--surface);padding:13px 14px;font-size:calc(14.5px * var(--dt-scale,1));line-height:1.7}
 .row-field{display:flex;align-items:center;justify-content:space-between;gap:10px;height:56px;
@@ -398,9 +398,9 @@ button{font-family:inherit}
 
 /* ===== feedback ===== */
 .toast-stage{display:flex;justify-content:center;padding:8px 0 16px}
-.toast{display:flex;align-items:center;gap:9px;background:var(--ink);color:#fff;font-size:calc(13.5px * var(--dt-scale,1));
-  letter-spacing:.05em;padding:11px 20px;border-radius:24px;box-shadow:0 8px 24px rgba(0,0,0,.24)}
-.toast .ic{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.16);
+.toast{display:flex;align-items:center;gap:8px;background:var(--accent-soft);color:var(--accent-deep);font-size:calc(16px * var(--dt-scale,1));
+  letter-spacing:.05em;padding:12px 16px;border-radius:var(--r-btn);box-shadow:0 8px 24px rgba(0,0,0,.24);max-width:100%;overflow-wrap:anywhere}
+.toast .ic{width:18px;height:18px;border-radius:50%;background:transparent;flex:none;
   display:flex;align-items:center;justify-content:center}
 .toast .ic svg{width:10px;height:10px}
 .stage{background:rgba(28,26,22,.4);border-radius:var(--r-card);padding:34px 24px;display:flex;justify-content:center}
@@ -414,7 +414,7 @@ button{font-family:inherit}
 .alert-btns button:hover{background:var(--fill)}
 .alert-btns button + button{border-left:1px solid var(--line)}
 .alert-btns .em{color:var(--accent-text);font-weight:700}
-.alert-btns .dg{color:var(--danger);font-weight:600}
+.alert-btns .dg{color:var(--danger-text);font-weight:600}
 .banner{display:flex;gap:10px;align-items:flex-start;background:var(--accent-soft);
   border-radius:var(--r-in);padding:12px 14px;font-size:calc(12.5px * var(--dt-scale,1));line-height:1.7;color:var(--accent-deep)}
 .banner .bi{flex:none;margin-top:1px;color:var(--accent-text)}

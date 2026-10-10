@@ -90,4 +90,4 @@ python skill/scripts/test_system.py
 
 ## 顶部轻提示
 
-接入操作反馈时读取[交互说明](../docs/interaction-standard.md)中的“顶部轻提示”：简短、非阻断信息在顶部安全区内完整显示后约 3 秒自动消失，无需点击确认。错误恢复、持续状态及风险确认沿用原有流程；读屏或长文案需要更多时间时延长或提供可再次查看的结果。该文档为规则源，`site_support.py → standards_page()` 同步展示，验收见 F01–F03。静态 Toast 不代表定时消失已经实现。
+读取[交互说明](../docs/interaction-standard.md#顶部轻提示2026-10-10)，权威来源为 `ui_contract.py → FEEDBACK / FEEDBACK_RULES`，由生成器用于 CSS、规范页、文档生成区块与 `components.transient_feedback` 导出。水平居中、实际顶部安全区下沿8pt，完整停留1.5秒后200ms透明度缓出；安全区不重复叠加。静态样张持续可见、不实现计时器。旧3秒、靠右及“安全区内”笼统位置描述已失效；验收见F01–F06。

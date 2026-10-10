@@ -1,8 +1,8 @@
 {
   "status": "PASS",
-  "checks": 2416,
+  "checks": 2709,
   "html_pages": 21,
-  "links": 525,
+  "links": 522,
   "themes": 7,
   "icons": 169,
   "minimum_text_contrast": {
@@ -31,7 +31,7 @@
       "dark_hc": 7.004
     },
     "E": {
-      "light": 4.603,
+      "light": 4.611,
       "dark": 4.61,
       "light_hc": 7.001,
       "dark_hc": 7.009
@@ -53,26 +53,26 @@
   "browser_visual": "NOT_RUN: browser layout and interaction require separate review",
   "native_ios": "NOT_RUN: no iOS application or simulator in this project",
   "files": {
-    "a-yohaku-ext.html": "eec7154ec953386698d6b05de674475a9c5e536f96b62d78fa2fa29cc6418f77",
-    "a-yohaku.html": "c187d5bb4fcda33f16f21d6322e1289f305856fbe8ae8be8b42e0bff09626697",
-    "adaptive.html": "dd6dfa09bae4aa4b17d9de84b42da6a075c173b1b199745f9a74f6b346bef70b",
-    "b-aizome-ext.html": "6c97063eef8498ea492bb24a4710708a0899cb0efe4349074b3ea073c4973550",
-    "b-aizome.html": "786a6e7405a47b80066de3d6621bfcc0a3a6667be006fe0a8a215bfda1372163",
-    "c-wakatake-ext.html": "8ae78f372a1b898fbb1d2f845a15a85995d7f059750a994f5f01a01ee195d71d",
-    "c-wakatake.html": "3553682b7559bf44fc9867925f92657de48abfb31bebee7bfc935ee5c3258591",
-    "components.html": "3c029dbc1406bb7de05ae25468fa2d3e5c43c913b7e4d207037735d1464620fc",
-    "d-murasaki-ext.html": "d9eb62659ee18b7481ad008a45b04493cc6d79794cc06fbe45bba1e91639cd7c",
-    "d-murasaki.html": "21ca767f31d2151885f8b148df7be08d526bdfda802ab9460808465d5972328f",
-    "devices.html": "cc5010261e184bd9ec97541652a42f63dd93d335ffda90c83747759999adae73",
-    "e-seiji-ext.html": "21f1147fde773746bf27a850ba4990d3941a9670036ffe1981755a99ef1c18d4",
-    "e-seiji.html": "3f645031ec0f0e7d89a867205654cfb31de6d77cc432c592ee3f657571b054c0",
-    "f-sakura-ext.html": "d70a26c52e5bcda9dd80d84375b89e47e07f375ca2742874817a48eb9b7b150a",
-    "f-sakura.html": "058db95356df89c043866e60591cb0427145814464d64673bfb1d20d6ca199d2",
-    "icons.html": "2cfb0f8579c4fb998c14decd01c9c3a62f9ffb95fc29aba25168a8ef33c3ac55",
-    "index.html": "17240d954219d43ba1f6bb2d0fe3ccc37437c6b8f8cd03734377f98f7736af0f",
-    "reuse.html": "d6cbcedaa65fdfa36b786cb8ffff6870534699fa7c1cb5efec81bc357cf382a6",
-    "standards.html": "8e565f1a90f98e4ea70e3dd8a2c6d8d5d5fa0f09bd27eb8165d14e4ac7ebaddc",
-    "theme-sunny-day-ext.html": "0b6b31df330e1fcbd9caa8f2814a2589adf4ba029be24fd233d954370642d896",
-    "theme-sunny-day.html": "51efa5643176d8a589625df3bb7f1b441cc2a0599bcfe27b57828cf5fd68d038"
+    "a-yohaku-ext.html": "005ac40b7bb37d58dbf367d211933395de57648cd48d499a9ae59c34e4d891e8",
+    "a-yohaku.html": "f5e87354b6a7ffdbe3093379d215e3b9013f1870ea259718358c8d301c9abc11",
+    "adaptive.html": "44c924b4093690931bd6afbcd26cc491cb0a99c8af34237ac41897b75170fdee",
+    "b-aizome-ext.html": "499ffd4a26d0eb16fa44f5290a82b95aee5b21b97b16ace391d695fca144031c",
+    "b-aizome.html": "354a4cfb24a16c3d966cc66d4eb913e20e0484e3a14403b729581ddee8018250",
+    "c-wakatake-ext.html": "d11527188b0248ac07476834e68251ba8d536a197a531c67e19c029647d01bf3",
+    "c-wakatake.html": "b2a8064cfd17870cbead899eda12819632110580f494bde19f0656c1044550be",
+    "components.html": "3030de4830907d0629c66408045baafd2b7c9acee2c064f6b82a36a16e3a314c",
+    "d-murasaki-ext.html": "c53490be8239f3f440fa0f292d7c31a20434ad7d3851293c0eafe67ab8c7e6df",
+    "d-murasaki.html": "354e394a30bf02a5e5caa2e41d1f32cd08066ea5474adff22264700a0db1f91c",
+    "devices.html": "d72eede9c12fc818a4092cd95c6e7748e11a9d57f710d8419a9879bbf83c8ff9",
+    "e-seiji-ext.html": "cbd8b3c31200cd38597a5362b5d5cd27f81142f114e7d10e6bcc8d01a051d332",
+    "e-seiji.html": "a92f86b3f5672df4174815025e1cd42d041bb10e0c1ab98abcb59d460a1b3cda",
+    "f-sakura-ext.html": "99f205c1bee71e59ff2677d948c2ebd023454ec7d5412f14e1c187a9d2c61120",
+    "f-sakura.html": "a33b3e9dfb72836f722b30dde497af6506e04d8349aee11778b13408e2ee12f5",
+    "icons.html": "32f8f43ac24d8cc5e46950412eb29206fe5e55b4ad346cdd5b3bf548a5a4a20b",
+    "index.html": "7dfcbab331fdf28dc65fd48d51313741130e0d9fe69ea2fa7654d34c2dcd2a1b",
+    "reuse.html": "f92aca76fc67bf9e1fecef49d2b586f674905ed85a85832caf052a12bbcab0a8",
+    "standards.html": "0b7b7102b974e78d7f391fa2ec14cfe3867dc58324085da4e9dd4dbacc18a85b",
+    "theme-sunny-day-ext.html": "9982d8da1a517fd1f97b284f076f07e188e8f4ce89860f85d1f6aab8c4d8774a",
+    "theme-sunny-day.html": "2d9ce29239ec1429a03378eb71d7b10b4f255a356a8cd7f3c0f83f2950516fe4"
   }
 }

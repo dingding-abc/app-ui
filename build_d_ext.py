@@ -16,7 +16,7 @@ D · 紫硝子 MURASAKI GLASS —— 扩展篇生成器
 
 踩过的坑（已规避）：
   * `.toast` 玻璃底若写 `var(--ink)`，在 `.dark` 作用域里 --ink 是浅色
-    → 浅底 + 浅字直接不可读。改用 `var(--toast-bg)`，两套作用域各自正确。
+    → 浅底 + 浅字直接不可读。现统一使用 accent_soft / accent_deep，不受玻璃背景混色影响。
   * GLASS_CSS 含大量字面 %（color-mix / saturate），只能用 replace 注入，禁用 % 格式化。
   * 所有注入的 SVG 必须过 scan_unsized_svg，否则重演「巨大加号撑爆容器」。
 
@@ -80,10 +80,10 @@ EXT_GLASS_CSS = """
   box-shadow:0 -14px 44px rgba(26,24,30,.16);
 }
 .dglass .sheet.full{border-top:0;box-shadow:0 -8px 30px rgba(26,24,30,.10)}
-/* Toast / Banner：底色必须取 --toast-bg 而非 --ink，
-   因为 .dark 作用域下 --ink 是浅色，用错会得到浅底+浅字 */
+/* Toast 与顶部提示同语义配色；使用实色避免背景混色改变对比度。 */
 .dglass .toast{
-  background:color-mix(in srgb, var(--toast-bg) 88%, transparent);
+  background:var(--accent-soft);
+  color:var(--accent-deep);
   backdrop-filter:blur(20px) saturate(160%);
   -webkit-backdrop-filter:blur(20px) saturate(160%);
 }
@@ -124,8 +124,8 @@ GLASS_NOTES = """
 
 def glass_spec(dark):
     """一台 D 玻璃样机。复用已验证的 gscreen()，不新写 markup。"""
-    return ('<div class="screen dev gspec">%s</div>'
-            % gscreen(dark=dark, n_events=7))
+    return ('<div class="screen dev gspec%s">%s</div>'
+            % (' dark' if dark else '', gscreen(dark=dark, n_events=7)))
 
 
 def build_glass_section():

@@ -19,8 +19,11 @@ class Document(HTMLParser):
         self.hour_modes=[];self.hour_options=[];self.hour_wheels=[]
         self.time_modes=[];self.time_options=[];self.minute_options=[];self.time_wheels=[]
         self.widget_modes=[];self.widget_families=[]
+        self.buttons=[]
+        self.glass_modes=[]
     def handle_starttag(self,tag,attrs):
         a=dict(attrs)
+        if tag=='button':self.buttons.append(a)
         if 'data-widget-mode' in a:self.widget_modes.append(a['data-widget-mode'])
         if 'data-widget-family' in a:self.widget_families.append(a['data-widget-family'])
         if 'data-hour-mode' in a:self.hour_modes.append(a['data-hour-mode'])
@@ -29,6 +32,7 @@ class Document(HTMLParser):
         if 'data-time-hour' in a:self.time_options.append(a)
         if 'data-minute' in a:self.minute_options.append(a)
         classes=a.get('class','').split()
+        if 'gspec' in classes:self.glass_modes.append('dark' if 'dark' in classes else 'light')
         if 'hp-time-wheel' in classes:self.time_wheels.append(a)
         elif 'hp-wheel' in classes:self.hour_wheels.append(a)
         if 'id' in a:self.ids.add(a['id'])
@@ -55,6 +59,21 @@ def variables(block):
     return {k.replace('-','_'):v.strip() for k,v in re.findall(r'--([\w-]+):\s*([^;}]+)',block)}
 
 
+def css_declarations(css, selector):
+    """Read ordered declarations for an exact selector, not class counts.
+
+    This checks emitted bindings. Browser computed-style checks cover cascading,
+    transparency, actual geometry and text expansion separately.
+    """
+    result = {}
+    css = re.sub(r'/\*.*?\*/', '', css, flags=re.S)
+    for selectors, block in re.findall(r'([^{}]+)\{([^{}]*)\}', css):
+        if selector in [part.strip() for part in selectors.split(',')]:
+            result.update({key.strip(): value.strip() for key, value in
+                           re.findall(r'([\w-]+)\s*:\s*([^;]+)', block)})
+    return result
+
+
 def validate(project,write=True):
     project=Path(project).resolve();sys.path.insert(0,str(project))
     from design_tokens import ratio
@@ -62,6 +81,7 @@ def validate(project,write=True):
     from shape_tokens import SHAPES, CONTRACT as BUTTON_CONTRACT
     from widget_spec import CONTRACT as WIDGET_CONTRACT
     from component_catalog import CONTRACT as COMPONENT_CONTRACT, FORM_CONTRACT
+    from ui_contract import TYPE_SIZES, TYPE_ROLES, SPACING, LAYOUT, FEEDBACK, feedback_markdown
     data=json.loads((project/'design-tokens.json').read_text(encoding='utf-8'))
     failures=[];checks=0;minimums={}
     def check(condition,reason):
@@ -83,6 +103,11 @@ def validate(project,write=True):
     check(data.get('components',{}).get('html_demo')==COMPONENT_CONTRACT,'HTML demo catalog differs from source contract')
     check(data.get('components',{}).get('picker_presentation')==PRESENTATION_CONTRACT,'Picker presentation export differs from source contract')
     check(data.get('components',{}).get('form_interaction')==FORM_CONTRACT,'Form interaction export differs from source contract')
+    check(data.get('components',{}).get('transient_feedback')==FEEDBACK,'Feedback export differs from source contract')
+    check(data.get('typography')==TYPE_SIZES and data.get('typography_roles')==TYPE_ROLES,'Typography export differs from source contract')
+    check(data.get('spacing')==SPACING and data.get('layout')==LAYOUT,'Spacing/layout export differs from source contract')
+    guidance=(project/'docs/interaction-standard.md').read_text(encoding='utf-8')
+    check(feedback_markdown() in guidance,'Feedback guidance differs from source contract')
     for key,t in data['themes'].items():
         minimums[key]={}
         for mode in ('light','dark','light_hc','dark_hc'):
@@ -96,6 +121,8 @@ def validate(project,write=True):
             for fg,bg in [('on_accent','accent'),('on_danger','danger'),('on_stamp','stamp'),('accent_deep','accent_soft'),('tone2_text','soft2'),('tone3_text','soft3')]:
                 scores.append(pair(p,fg,bg,target,context))
             for state in ('success','warning','info'):pair(p,state+'_text',state+'_soft',target,context)
+            pair(p,'danger_text','danger_soft',target,context)
+            pair(p,'success_text','surface',target,context)
             for fg in ('data2','data3','chart_muted'):pair(p,fg,'surface',3,context)
             minimums[key][mode]=round(min(scores),3)
     pages={}
@@ -164,6 +191,35 @@ def validate(project,write=True):
             check([w.get('aria-activedescendant') for w in doc.time_wheels]==[v for m in modes for v in ('tp-'+m+'-time-hour-9','tp-'+m+'-minute-30')],f'{name}: accessible time selection mismatch')
             check(all(w.get('role')=='listbox' and w.get('tabindex')=='0' and len(w.get('aria-labelledby','').split())==2 and all(label in doc.ids for label in w['aria-labelledby'].split()) for w in doc.time_wheels),f'{name}: time column labels/focus incorrect')
             css='\n'.join(pages[name][1].styles)
+            for selector, foreground, background in (
+                ('.btn-danger','danger-text','danger-soft'),
+                ('.alert-btns .dg','danger-text',None),
+                ('.toast','accent-deep','accent-soft'),
+                ('.tf-notice','accent-deep','accent-soft'),
+                ('.cc-section .cc-success','success-text',None),
+                ('.cc-section .cc-error','danger-text',None)):
+                binding=css_declarations(css,selector)
+                check(binding.get('color')==f'var(--{foreground})',f'{name}: actual component color binding {selector}')
+                if background:check(binding.get('background')==f'var(--{background})',f'{name}: actual component background binding {selector}')
+            if key=='D' and name.endswith('-ext.html'):
+                check(doc.glass_modes==['light','dark'],f'{name}: glass sample mode coverage')
+                binding=css_declarations(css,'.dglass .toast')
+                check(binding.get('background')=='var(--accent-soft)' and binding.get('color')=='var(--accent-deep)',f'{name}: glass toast must preserve semantic colors')
+            check(css_declarations(css,'.cc-card').get('padding')=='var(--layout-component-padding)',f'{name}: card spacing must consume layout contract')
+            check(css_declarations(css,'.cc-row').get('gap')=='var(--layout-component-gap)',f'{name}: control spacing must consume layout contract')
+            for selector, height in (('.search',44),('.btn-sm',44),('.tab',44)):
+                binding=css_declarations(css,selector)
+                check(binding.get('min-height')==f'{height}px',f'{name}: {selector} minimum target')
+            check(css_declarations(css,'.search').get('height')=='auto',f'{name}: search must expand with text')
+            check(css_declarations(css,'.tabbar').get('height')=='auto',f'{name}: tabbar must expand with text')
+            if key=='D':
+                binding=css_declarations(css,'.gnav .gact')
+                check(binding.get('width')=='44px' and binding.get('height')=='44px',f'{name}: glass action minimum target')
+                check(css_declarations(css,'.gtab').get('height')=='auto',f'{name}: glass tabs must expand with text')
+                check(css_declarations(css,'.gscroll').get('overflow-y')=='auto',f'{name}: glass content must scroll')
+            for button in doc.buttons:
+                if 'btn-loading' in button.get('class','').split():
+                    check('disabled' in button and button.get('aria-busy')=='true',f'{name}: static submitting button must be busy and disabled')
             roots=re.findall(r':root\{([^}]+)\}',css)
             actual=next((variables(b) for b in roots if '--page-bg:' in b),{})
             for token in ('accent','accent_text','accent_ui','on_accent','tone2_text','control_border','r_btn','r_segment','r_segment_item'):
@@ -181,7 +237,7 @@ def validate(project,write=True):
         check(text.startswith('---\nname: jp-min-ui-build\n'), 'Skill identity/frontmatter changed')
         check(bool(re.search(r'^description: .+',text,re.M)), 'Skill description missing')
         for href in re.findall(r'\]\(([^)]+)\)',text):
-            if '://' not in href:check((skill.parent/href).exists(),f'Skill reference missing: {href}')
+            if '://' not in href:check((skill.parent/href.partition('#')[0]).exists(),f'Skill reference missing: {href}')
         for entry in ('create_theme.py','rebuild.py','validate.py','test_system.py'):
             check((skill.parent/'scripts'/entry).exists(),f'Skill entry missing: {entry}')
     result=dict(status='PASS' if not failures else 'FAIL',checks=checks,html_pages=len(pages),links=links,
