@@ -87,3 +87,7 @@ python skill/scripts/test_system.py
 ## 日期／时间弹层与表单输入
 
 接入选择器或数字表单时读取[交互说明](../docs/interaction-standard.md)。规范源分别为 `hour_picker.py → PRESENTATION_CONTRACT`、`component_catalog.py → FORM_CONTRACT`，由构建导出；文字与布局要求在 `site_support.py → standards_page()`。同步示例说明、`ACCEPTANCE.md` 和验收报告。现有 HTML 滚轮为展开内容，不能据此声称完整模态、系统键盘或原生性能已实现。
+
+## 顶部轻提示
+
+接入操作反馈时读取[交互说明](../docs/interaction-standard.md)中的“顶部轻提示”：简短、非阻断信息在顶部安全区内完整显示后约 3 秒自动消失，无需点击确认。错误恢复、持续状态及风险确认沿用原有流程；读屏或长文案需要更多时间时延长或提供可再次查看的结果。该文档为规则源，`site_support.py → standards_page()` 同步展示，验收见 F01–F03。静态 Toast 不代表定时消失已经实现。

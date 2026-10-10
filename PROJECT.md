@@ -71,3 +71,14 @@ HTML 的 px 是样张逻辑尺寸，不是原生字号承诺。`--dt-scale` 是�
 ## 2026-10-08 交互规范补充
 
 日期／时间独立弹层、手势隔离、停稳响应、单一表单键盘避让及单行数字居中纳入通用标准；入口为 `docs/interaction-standard.md`、`standards.html#picker-presentation`。导出新增 `components.picker_presentation` 和 `components.form_interaction`，分别由 `hour_picker.py`、`component_catalog.py` 维护，静态验收检查源与导出一致。现有分钟默认步进 1、主题和业务边界不变；展开内容演示不代表完整原生弹层。
+
+
+## 2026-10-09 导航选中态
+
+底部当前导航项新增主题浅底与统一 12pt 圆角；语义使用 accent_soft / accent_deep，四模式沿用现有颜色求解，原种子不变。shape_tokens.py 提供 NAVIGATION_CONTRACT，rebuild.py 导出 components.navigation_selection；site_support.py 更新所有主题样张及规范页。真实原生导航仍由消费 App 验收。
+
+## 2026-10-10 顶部轻提示
+
+根据“齿间时光”补充需求，将“顶部信息，约 3 秒自动消失，无需点击确认”纳入简短非阻断反馈规则。权威来源为 `docs/interaction-standard.md` 的“顶部轻提示”，同步 `site_support.py → standards_page()`、`standards.html#transient-feedback`、skill 和 F01–F03 验收。仅追加规范文字，无新增计时器实现或 JSON 契约；保留原有错误恢复、风险操作及选择器确认。当前仓库无“齿间时光”App 源码，其实际行为待在消费工程验证。
+
+后续按用户要求新增静态显示效果：`site_support.py → feedback_samples()` 与共用样式生成各主题 `#top-feedback`，基础页为浅色／浅色 HC，扩展页为深色／深色 HC。以“齿间时光”的演示记录作为背景，顶部“记录已保存”持续显示，无确认按钮、计时器或消失动画。截图位于 `docs/previews/`，规范页及各主题顶部提供入口。

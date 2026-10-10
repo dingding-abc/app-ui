@@ -1480,6 +1480,19 @@
       ],
       "note": "Project styling choice; not a universal Apple button radius"
     },
+    "navigation_selection": {
+      "version": 1,
+      "selected_background": "accent_soft",
+      "selected_text": "accent_deep",
+      "selected_icon": "accent_deep",
+      "unselected_background": "transparent",
+      "unselected_foreground": "faint",
+      "radius": "r_segment",
+      "min_hit_target": 44,
+      "indicator": "rounded_background_around_icon_and_label",
+      "semantics": "one_current_item_with_accessibility_selected_state",
+      "note": "Resolve foreground against accent_soft; retain labels and native selected semantics"
+    },
     "widgetkit": {
       "version": 1,
       "platform": "WidgetKit",
@@ -1573,8 +1586,8 @@
     "component_catalog.py": "4cfeb0b8976d4ec8598b672d0d860eea488ae23b15203bb90c38b5b2d37f03ae",
     "design_tokens.py": "0c41e4442756ac5e0c32532d63ad619a9ff4a630d69604aa13ce114358000520",
     "hour_picker.py": "51db6e4b066efa75d63c316d3ec4d824ccac6ca0e5131c12d8258c48fe0fb40f",
-    "shape_tokens.py": "f2945333eb0c8340697a856e6631ea4c531d1e85b3914d9d3927b078bf9d5d84",
-    "site_support.py": "e51a1f970287c4eda338c6639be0487cec82316401d2a8cca5560676af267d98",
+    "shape_tokens.py": "6b97fda24647cfe2ac747178113d133ecd1f5380460a663d58f2087e9065126f",
+    "site_support.py": "7c8dde6ee73e529ecd404bfc9e95ee7175abef6f80529777c20f70e7b1af1fa2",
     "theme_registry.py": "70e343c0b53099f7405d5c354c9af967543a81abe0b7f29ad17800d04dfe1a5a",
     "themes.json": "7d4ce136387dbc66261e377f2fb0e16fb63fbbb946b8c27e4fa0e34419d2da13",
     "widget_spec.py": "3d3ba0a88743719dca2fa8bdfbcee960782ad8b77f1c5f1784e4349ff2fd5a99"

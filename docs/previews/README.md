@@ -1,5 +1,13 @@
 # UI 预览记录
 
+## 2026-10-10 顶部轻提示静态样张
+
+`top-feedback-light.jpg`、`top-feedback-dark.jpg` 分别来自重建后的 `a-yohaku.html#top-feedback` 和 `a-yohaku-ext.html#top-feedback`，为浏览器默认视口截图。每张包含普通与增强对比度样张，提示持续可见，无计时器或消失动画。另在 390×844 视口核对浅色样张，提示卡片宽 343px，内容无内部横向溢出。该检查仅针对新增区域，未验证原生 App、VoiceOver 或系统大字体。
+
+![顶部轻提示浅色样张](top-feedback-light.jpg)
+
+![顶部轻提示深色样张](top-feedback-dark.jpg)
+
 两张图片均于 2026-10-07 从本仓库重建后的 HTML 页面截取，浏览器默认视口 1280 × 720，浅色、默认字号。它们用于 GitHub README 与网页总览的式样介绍，不是生成插画。
 
 | 文件 | 源页面 | 截图内容 |

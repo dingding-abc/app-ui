@@ -48,8 +48,11 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
 .cbx::before,.rdo::before,.toggle::before{content:"";position:absolute;min-width:44px;min-height:44px;left:50%;top:50%;transform:translate(-50%,-50%)}
 .seg span{min-height:44px;display:flex;align-items:center;justify-content:center;padding:8px;white-space:normal}
 .cal-d{min-height:44px}.tab,.gtab .ti{min-height:44px}
-.tab.on{border-top:2px solid var(--accent-ui)}
-.tab.on,.gtab .ti.on{color:var(--accent-text)}
+.tabbar,.gtab{gap:4px}
+.tab,.gtab .ti{border-radius:var(--r-segment);justify-content:center}
+.tab.on,.gtab .ti.on{border-top:0;background:var(--accent-soft);color:var(--accent-deep)}
+.tab.on svg,.gtab .ti.on svg{color:var(--accent-deep)}
+.gtab .ti.on .dot{background:transparent}
 .btn-ghost,.alert-btns .em,.kw span,.sl-head b,.q-title,.notes h4,.col-tag .no{color:var(--accent-text)}
 .kw span{border-color:var(--accent-ui)}
 .rdo.on{border-color:var(--accent-ui)}.rdo.on::after{background:var(--accent-ui)}
@@ -78,10 +81,34 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(-
 .kit-doc p,.kit-doc li{font-size:16px;line-height:1.85}.kit-doc ul{padding-left:24px}
 .kit-doc table{width:100%;border-collapse:collapse;font-size:14px;line-height:1.7}
 .kit-doc th,.kit-doc td{padding:12px;text-align:left;border-bottom:1px solid #D8D0C0;vertical-align:top}
+.tf-section{margin:48px 0;font-family:system-ui,"Microsoft YaHei",sans-serif;letter-spacing:normal;color:var(--ink);scroll-margin-top:20px}
+.tf-section>h2{font-size:24px;margin:0 0 12px}.tf-section>p{font-size:15px;line-height:1.8;color:var(--sub);margin:0 0 24px}.tf-section a{color:var(--accent-text)}
+.tf-grid{display:flex;flex-wrap:wrap;gap:24px;align-items:start}.tf-example{margin:0;max-width:100%;width:375px}.tf-example figcaption{font-size:13px;color:var(--sub);margin-bottom:12px}
+.tf-phone{box-sizing:border-box;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:28px;overflow:hidden;box-shadow:0 12px 36px #00000012}
+.tf-status{height:52px;padding:0 24px;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:600}.tf-battery{width:22px;height:11px;border:1px solid currentColor;border-radius:3px;padding:2px}.tf-battery::after{content:"";display:block;background:currentColor;height:100%;border-radius:1px}
+.tf-top{padding:4px 16px 16px;display:flex;justify-content:center;pointer-events:none}
+.tf-notice{display:flex;align-items:center;gap:10px;max-width:100%;box-sizing:border-box;padding:12px 20px;border-radius:24px;background:var(--ink);color:var(--bg);box-shadow:0 8px 24px #00000026;font-size:calc(15px * var(--dt-scale,1));line-height:1.5;overflow-wrap:anywhere}
+.tf-notice svg{flex:none;width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tf-content{padding:12px 24px 32px}.tf-brand{font-size:calc(13px * var(--dt-scale,1));color:var(--sub);margin:0 0 8px}.tf-content h3{font-size:calc(26px * var(--dt-scale,1));line-height:1.4;margin:0 0 24px;letter-spacing:0}
+.tf-card{padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);margin-bottom:16px}.tf-card h4{margin:0 0 18px;font-size:calc(17px * var(--dt-scale,1));font-weight:600}.tf-row{display:flex;justify-content:space-between;gap:16px;font-size:calc(15px * var(--dt-scale,1));line-height:1.6;padding:12px 0;border-top:1px solid var(--line)}.tf-row span{color:var(--sub)}.tf-row b{font-weight:500;text-align:right;overflow-wrap:anywhere}
+.tf-saved{display:flex;align-items:center;gap:8px;color:var(--success-text);background:var(--success-soft);padding:12px 16px;border-radius:12px;font-size:calc(13px * var(--dt-scale,1));line-height:1.6}.tf-home{height:5px;width:112px;margin:0 auto 10px;background:var(--ink);border-radius:8px}
 @media(max-width:700px){.board{width:100%;padding:24px 16px}.bh-left{flex-wrap:wrap}.col{width:100%!important;flex-basis:100%}.cols{gap:24px}.stage{gap:24px}.sec-tag{flex-wrap:wrap}.bh-title h1{font-size:30px}.kit-doc{padding:24px 16px}.igrid{grid-template-columns:repeat(3,minmax(0,1fr))}.dd{flex-wrap:wrap}.dc-row{min-width:850px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}.btn:active{transform:none!important}}
 @media(prefers-reduced-transparency:reduce){.glass,.gnav,.gtab,.gbtn,.nav.glass,.tabbar.glass,.dglass .sheet{background:var(--surface)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important}}
 """
+
+
+def feedback_samples(dark=False):
+    modes = [('dark', '深色'), ('dark hc', '深色 · 增强对比度')] if dark else [('', '浅色'), ('hc', '浅色 · 增强对比度')]
+    examples = ''
+    for cls, label in modes:
+        examples += f'''<figure class="tf-example"><figcaption>{label}</figcaption>
+<div class="tf-phone {cls}"><div class="tf-status" aria-hidden="true"><span>9:41</span><span class="tf-battery"></span></div>
+<div class="tf-top"><div class="tf-notice" role="status"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="m8 12 2.5 2.5L16 9"></path></svg><span>记录已保存</span></div></div>
+<div class="tf-content"><p class="tf-brand">齿间时光</p><h3>今日记录</h3>
+<div class="tf-card"><h4>佩戴记录</h4><div class="tf-row"><span>记录日期</span><b>10 月 10 日</b></div><div class="tf-row"><span>备注</span><b>今天也有认真记录</b></div></div>
+<div class="tf-saved"><span aria-hidden="true">✓</span><span>本次记录已保存</span></div></div><div class="tf-home" aria-hidden="true"></div></div></figure>'''
+    return '<section class="tf-section" id="top-feedback"><h2>顶部轻提示 · 显示效果</h2><p>以“齿间时光”演示记录保存后的提示位置与样式。此处为静态示例，提示持续可见，无需点击确认；内容为演示数据。<a href="standards.html#transient-feedback">查看提示规范 →</a></p><div class="tf-grid">' + examples + '</div></section>'
 
 
 def prepare_page(page, current, theme=None):
@@ -92,7 +119,7 @@ def prepare_page(page, current, theme=None):
     if theme:
         base = theme['file']
         sibling = base if current.endswith('-ext.html') else base.replace('.html','-ext.html')
-        page = page.replace(note, note + f'<p class="kit-note"><a href="{sibling}">查看本主题的' + ('基础组件' if current.endswith('-ext.html') else '扩展组件与深色样张') + '</a></p>', 1)
+        page = page.replace(note, note + f'<p class="kit-note"><a href="{sibling}">查看本主题的' + ('基础组件' if current.endswith('-ext.html') else '扩展组件与深色样张') + '</a> · <a href="#top-feedback">顶部轻提示静态样张</a></p>', 1)
     extra = SHARED_CSS
     if current in ("index.html", "standards.html", "components.html", "adaptive.html", "reuse.html"):
         from build import THEMES, derive
@@ -102,7 +129,7 @@ def prepare_page(page, current, theme=None):
     if theme:
         states = '<section class="notes"><h3>状态语义</h3><div class="kit-status success">✓ 已保存 · 操作成功</div><div class="kit-status warning">! 需要留意 · 请检查输入</div><div class="kit-status info">i 提示 · 更多操作信息</div><p>错误需说明原因及恢复操作；状态同时使用文字或图标，不只靠颜色。</p></section>'
         extra += HOUR_CSS + WIDGET_CSS + COMPONENT_CSS
-        page = page.replace('<div class="foot">', states + widget_samples(current.endswith('-ext.html')) + hour_samples(current.endswith('-ext.html')) + component_samples('dark' if current.endswith('-ext.html') else 'light') + '<div class="foot">', 1)
+        page = page.replace('<div class="foot">', feedback_samples(current.endswith('-ext.html')) + states + widget_samples(current.endswith('-ext.html')) + hour_samples(current.endswith('-ext.html')) + component_samples('dark' if current.endswith('-ext.html') else 'light') + '<div class="foot">', 1)
         page = page.replace('</body>', '<script>' + HOUR_SCRIPT + COMPONENT_SCRIPT + '</script></body>', 1)
     page = page.replace('</head>', '<style>' + extra + '</style></head>', 1)
     page = page.replace('<button class="btn btn-disabled">', '<button class="btn btn-disabled" disabled>')
@@ -143,6 +170,15 @@ def standards_page():
 <tr><td>浅色／深色／增强对比度</td><td>四种组合独立生成。增强对比度下文字目标 7:1，不能回退到另一模式的颜色。</td></tr></table></div>
 <h2>文字与间距</h2><p>正文 17、操作说明 16、次标题 15、辅助说明 13、短标签 11；标题按用途使用 20 / 22 / 28 / 34。iOS 使用系统 Text Style，不将 HTML 比例等同于系统字号档位。可保留展示性书法或罗马字标识，功能文字随语言调整字体、字距与行高。</p><p>间距使用 4 / 8 / 12 / 16 / 24 / 32，页面边距默认 16。数字是起点，不强迫不同业务拥有相同布局。大字号时按钮、表单和卡片允许撑高，必要时由横向改纵向。</p>
 <h2>组件与交互</h2><ul><li>每屏主要操作明确；按钮区分默认、按下、禁用与提交中。提交中防止重复提交，失败保留输入并提供重试。</li><li>常用操作命中区域至少 44×44pt。22pt 图形保留在足够大的点击区域内；不可用扩大区域造成相邻操作重叠。</li><li>输入框明确标签、必填、错误原因和恢复方式；弹出键盘后仍能看到当前输入与主要操作。</li><li>Sheet 区分取消与保存；有未保存内容时关闭需处理丢失风险；滚动到末尾的内容和操作不能被悬浮栏遮挡。</li><li>列表提供加载、空、失败、无权限与正常状态。HTML 样张不代表联网业务已经实现。</li></ul>
+<section id="transient-feedback"><h2>顶部轻提示</h2>
+<p><a href="a-yohaku.html#top-feedback">查看浅色静态效果 →</a> · <a href="a-yohaku-ext.html#top-feedback">查看深色静态效果 →</a> · <a href="theme-sunny-day.html#top-feedback">晴日配色 →</a></p>
+<p><strong>顶部信息，约 3 秒自动消失，无需点击确认。</strong>适用于保存成功、复制完成等简短、非阻断反馈。约 3 秒是项目默认值，不是平台强制时限。</p>
+<ul><li>显示在当前可见页面或弹层顶部的安全区内，避开状态栏及关键导航；无模态遮罩、不阻止继续操作、不抢输入或读屏焦点，不要求点击“确定／知道了”。</li>
+<li>从内容完整显示起约 3 秒自动消失。同一时刻一条，相同信息合并、新信息替换并重新计时；取消旧计时器，离开所属页面或卸载时清理。</li>
+<li>沿用现有 Toast、语义颜色、字号与间距，四模式文字可读，状态有明确文字，大字体允许换行。成功反馈只能在操作确实成功后显示。</li>
+<li>需要修正／重试的错误、持续离线／无权限状态和重要信息须保留在页面或相应弹层。删除等风险操作和选择器草稿仍按原有规则确认；提示消失不等于确认或提交。</li>
+<li>使用平台状态播报；HTML 可用 role="status"／礼貌播报。读屏、大字体或长文案需要更多时间时延长展示或提供可再次查看的等价结果，遵循减少动态效果设置。</li></ul>
+<p>本节补充现有反馈规范；静态 Toast 样张不代表自动消失行为已实现。完整规则与验收见 <a href="docs/interaction-standard.md#顶部轻提示2026-10-10">顶部轻提示说明</a>，实际计时、安全区及 VoiceOver 在接入 App 后验证。</p></section>
 <section id="picker-presentation"><h2>日期／时间弹层与表单避让</h2>
 <p>字段位于页面底部、弹窗内或大字号布局时，日期和时间选择使用独立模态容器。打开收起键盘，背景不能接收触控和滚动；不得依赖用户先把页面滚到某处才能完整操作。遵循系统弹层与安全区，同一模态层只有一个当前活动的选择器。</p>
 <div class="kit-table-wrap"><table><tr><th>区域／状态</th><th>要求</th></tr>
@@ -157,9 +193,9 @@ def standards_page():
 <h3>键盘与数字输入</h3><p>每个表单视口由一个容器负责滚动和键盘避让；嵌入 Sheet 的表单复用外层容器，避免嵌套页面再滚动或重复计算键盘边距。键盘打开、切换输入框和高度变化时，当前输入框整体可见，主要操作可到达；由实际键盘和安全区计算可用空间，不写死机型高度。</p>
 <p>单行数字在输入框内纵向居中，保留数字键盘和可选加减按钮；多行备注顶部对齐。字号放大时允许控件增高，不用缩字掩盖裁切，也不将文字行高直接套在原生单行输入上。清空和非法草稿不静默提交旧值或零值。</p>
 <p>验收覆盖底部入口、页面滑动后立即拨轮、两列同时操作、键盘已打开时切换字段、弹窗内表单、小屏、大字体、明暗与读屏。记录版本、设备、场景和观察结果。各主题现有滚轮是展开内容的 HTML 演示；本节是接入要求，未交付完整原生日期／时间弹层。见 <a href="docs/interaction-standard.md">接入与验收说明</a>。</p></section>
-<h2>图标与材质</h2><p>通用自绘图标采用 24pt 网格、约 20pt 核心绘制区、1.6pt 圆头线条；箭头与勾号可按既有例外加粗。原生 Tab 优先采用系统组件与匹配的 SF Symbols 变体，允许填充图标。普通线性图标和原生 Tab 的例外需明确区分。</p><p>主题色与材质是两个维度。玻璃只用于导航与控件，不铺满内容卡片。HTML 毛玻璃仅为视觉示意；iOS 使用系统材质并响应降低透明度、减少动态效果。老系统回退到实色，不改变操作含义。</p>
+<h2 id="navigation-selection">当前导航项</h2><p>当前页面的底部导航项用轻微主题浅底 accent_soft 标识，圆角统一取 r_segment（12pt），底色覆盖图标和标签。选中文字和图标使用对该浅底求解的 accent_deep；未选中项透明、前景使用 faint。保留清晰标签与原生 selected 无障碍状态，不把主操作按钮填充用于导航选中，不仅靠前景变色区分位置。</p><p>普通模式文字对浅底至少 4.5:1，增强对比度至少 7:1；图标至少 3:1。每个导航目标至少 44pt，项目间保留 4pt，放大字号允许换行与增高。纸感、玻璃及新增主题共用同一状态含义；原生安全区与 Dynamic Type 仍需 App 验证。</p><h2>图标与材质</h2><p>通用自绘图标采用 24pt 网格、约 20pt 核心绘制区、1.6pt 圆头线条；箭头与勾号可按既有例外加粗。原生 Tab 优先采用系统组件与匹配的 SF Symbols 变体，允许填充图标。普通线性图标和原生 Tab 的例外需明确区分。</p><p>主题色与材质是两个维度。玻璃只用于导航与控件，不铺满内容卡片。HTML 毛玻璃仅为视觉示意；iOS 使用系统材质并响应降低透明度、减少动态效果。老系统回退到实色，不改变操作含义。</p>
 <h2>验收顺序</h2><ol><li>P0：四种颜色组合、标签文字、按钮字色和功能图标对比度。</li><li>P1：主题覆盖、页面导航、图标规则、长文案及字号放大、命中区和文档一致性。</li><li>P2：新主题生成、重复构建稳定、配置校验、资源与导出数据可追溯。</li><li>iOS 工程：最小与最大支持设备、系统大字号、VoiceOver、键盘、深浅模式及减少动态效果。通过记录必须含版本、场景和实际结果。</li></ol><p>设备页面是预设尺寸下的 HTML 样张，不是模拟器或真机检测报告。安全区由系统读取，不把样张中的 62 / 34 常量写入产品。</p>
 <h2>依据</h2><p><a href="https://developer.apple.com/design/human-interface-guidelines/typography">Apple 字体</a> · <a href="https://developer.apple.com/design/human-interface-guidelines/buttons">Apple 按钮</a> · <a href="https://developer.apple.com/documentation/technologyoverviews/adopting-liquid-glass">Liquid Glass</a> · <a href="https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html">WCAG 文字对比度</a></p>'''
-    content = content.replace('<h2>图标与材质</h2>', widget_standard() + hour_standard() + '<h2>图标与材质</h2>')
+    content = content.replace('<h2 id="navigation-selection">当前导航项</h2><p>当前页面的底部导航项用轻微主题浅底 accent_soft 标识，圆角统一取 r_segment（12pt），底色覆盖图标和标签。选中文字和图标使用对该浅底求解的 accent_deep；未选中项透明、前景使用 faint。保留清晰标签与原生 selected 无障碍状态，不把主操作按钮填充用于导航选中，不仅靠前景变色区分位置。</p><p>普通模式文字对浅底至少 4.5:1，增强对比度至少 7:1；图标至少 3:1。每个导航目标至少 44pt，项目间保留 4pt，放大字号允许换行与增高。纸感、玻璃及新增主题共用同一状态含义；原生安全区与 Dynamic Type 仍需 App 验证。</p><h2>图标与材质</h2>', widget_standard() + hour_standard() + '<h2 id="navigation-selection">当前导航项</h2><p>当前页面的底部导航项用轻微主题浅底 accent_soft 标识，圆角统一取 r_segment（12pt），底色覆盖图标和标签。选中文字和图标使用对该浅底求解的 accent_deep；未选中项透明、前景使用 faint。保留清晰标签与原生 selected 无障碍状态，不把主操作按钮填充用于导航选中，不仅靠前景变色区分位置。</p><p>普通模式文字对浅底至少 4.5:1，增强对比度至少 7:1；图标至少 3:1。每个导航目标至少 44pt，项目间保留 4pt，放大字号允许换行与增高。纸感、玻璃及新增主题共用同一状态含义；原生安全区与 Dynamic Type 仍需 App 验证。</p><h2>图标与材质</h2>')
     page = '<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><title>设计与验收规范 v5</title><style>*{box-sizing:border-box}body{margin:0;background:#F1EEE8;color:#2A2723;font-family:system-ui,sans-serif}a{color:#654631}</style></head><body><div class="board"><main class="kit-doc">' + content + '</main></div></body></html>'
     return prepare_page(page, 'standards.html')
